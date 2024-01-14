@@ -1,0 +1,108 @@
+/* Write your global styles here, in PostCSS syntax */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base{
+    h1{
+        font-size: 40px;
+        font-weight: 600;
+    }
+    a {
+        @apply text-primary-100 underline hover:text-primary-200
+    }
+    /* Table */
+    tr:nth-child(2n){
+        @apply bg-primary-10 
+    }
+    tr{
+        @apply border border-slate-200
+    }
+
+    th {
+        @apply py-3 px-6 min-w-44 text-start text-sm bg-slate-100 border-slate-500 text-slate-600
+    }
+    td {
+        @apply py-4 px-6 
+    }
+    /* Form stuff */
+    select {
+        @apply rounded-lg p-2.5 px-4 border text-base cursor-pointer bg-gray-100
+    }
+    input {
+        @apply text-black rounded-lg p-2 px-4 border text-base
+    }
+    input::placeholder{
+        @apply text-gray-400
+    }
+    textarea {
+        @apply border border-gray-200
+    }
+
+    /* Disabled */
+
+    .disabled select{
+        @apply text-gray-600 bg-gray-100 pointer-events-none
+    }
+    .disabled input::placeholder{
+        @apply text-gray-300
+    }
+    .disabled input:not(.enabled){
+        @apply text-gray-600 bg-gray-100 pointer-events-none
+    }
+    .disabled label{
+        @apply text-gray-600 pointer-events-none
+    }
+    .disabled input[type="radio"]{
+        @apply accent-gray-500
+    }
+    .disabled .edisablednable {
+        @apply text-black 
+    }
+    
+}
+
+@layer components{
+    .btn {
+        @apply bg-primary-100 rounded-lg p-2 px-4 hover:bg-primary-200 text-white inline-block cursor-pointer
+    }
+    .btn-alt {
+        @apply bg-primary-10 rounded-lg p-2 px-4 hover:bg-primary-20 text-black inline-block cursor-pointer
+    }
+    .btn-err {
+        @apply bg-error-50 rounded-lg p-2 px-4 hover:bg-error-70 text-error-100 inline-block cursor-pointer
+    }
+    /* Radio group */
+    .btn-group{
+        @apply flex flex-row bg-primary-10 rounded-lg
+    }
+    .btn-group :nth-child(2) {
+        @apply rounded-s-lg
+    }
+    .btn-group :last-child {
+        @apply rounded-e-lg
+    }
+    .btn-group *{
+        @apply  p-2 px-4 mx-0 hover:bg-primary-20
+    }
+    .btn-group input[type=radio] {
+        visibility: collapse;
+        position: fixed;
+        flex: 0 1 auto;
+        width: 0;
+        padding: 0;
+        margin: 0;
+        box-sizing: content-box;
+    }
+    .btn-group input[type="radio"]:checked + label {
+        @apply bg-primary-100 hover:bg-primary-200 text-white
+    }
+
+    .badge {
+        @apply px-2.5 py-0.5 bg-slate-300 rounded-2xl text-sm border
+    }
+    .form-required::after {
+        content: '*';
+        @apply text-red-500 px-1;
+    }
+}
