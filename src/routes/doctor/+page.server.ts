@@ -6,7 +6,7 @@ export async function load(){
     let response : Response
     try {
         // TODO
-        response = await fetch(PUBLIC_CLIENT_FRONTEND_URL+"/referral?Id=123456")
+        response = await fetch(PUBLIC_CLIENT_FRONTEND_URL+"/")
         if(!response.ok){
             throw new Error("Could not connect to client");
         }
@@ -17,9 +17,9 @@ export async function load(){
             error: "Error: Could not connect to referral system client"
         }
     }
-    let fetchData : Referral[] = await response.json()
+    let fetchData : {"referrals":Referral} = await response.json()
     return {
-        referrals: fetchData,
+        referrals: fetchData["referrals"],
         title: "Referral Cases"
     } 
 }
