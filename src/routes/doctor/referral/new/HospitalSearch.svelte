@@ -6,6 +6,8 @@
   import { Button, buttonVariants } from "$lib/components/ui/button";
     import { addSelectedRows } from "svelte-headless-table/plugins";
     import type { HospitalData } from "$lib/global";
+    import { PUBLIC_HOSPITAL_ID } from "$env/static/public";
+    import { cn } from "$lib/utils";
 export let data : HospitalData[] = []
 const table = createTable(readable(data),{
   select: addSelectedRows()
@@ -33,7 +35,11 @@ let dialogOpen = false
 function setOpen(val:boolean){
   dialogOpen = val
 }
-export let dataView = "Find Patient"
+function getDataId(row: any){
+  return row.dataId
+}
+export let dataView = "Find Hospital"
+const selfHospital = PUBLIC_HOSPITAL_ID
 </script>
 
 <Dialog.Root open={dialogOpen} onOpenChange={setOpen}>
@@ -42,7 +48,7 @@ export let dataView = "Find Patient"
   >
   <Dialog.Content class="sm:max-w-[60rem]">
     <Dialog.Header>
-      <Dialog.Title>Find Patient</Dialog.Title>
+      <Dialog.Title>Find Hospital</Dialog.Title>
     </Dialog.Header>
 
     <Table.Root {...$tableAttrs} class="w-full">
@@ -64,7 +70,7 @@ export let dataView = "Find Patient"
       <Table.Body {...$tableBodyAttrs}>
         {#each $pageRows as row (row.id)}
           <Subscribe rowAttrs={row.attrs()} let:rowAttrs>
-            <Table.Row {...rowAttrs} class="cursor-pointer select-none" on:click={()=>{
+            <Table.Row {...rowAttrs} class={cn("cursor-pointer select-none",getDataId(row) == selfHospital ? "hidden": "")} on:click={()=>{
               selectedPatient = row
             }}>
               {#each row.cells as cell (cell.id)}
