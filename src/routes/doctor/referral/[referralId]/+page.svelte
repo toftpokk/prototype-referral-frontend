@@ -1,4 +1,7 @@
 <script lang="ts">
+    import ReferralView from '$lib/ReferralView.svelte';
+import { translateReferralStatus } from '$lib/global';
+
     export let data : import('./$types').PageData;
     function getPrefix(p: string){
         if(p == "mr"){
@@ -13,19 +16,11 @@
     }
 </script>
 <div>
-    {#if data["error"]}
-        <p>{data["error"]}</p>
-    {:else}
-        <h2 class="text-xl font-bold">Referral</h2>
-        <p>referralId: {data.referralId}</p>
-        <p>Destination: {data.referral.Destination}</p>
-        <p>Creation Date: {new Date(data.referral.Created).toLocaleString('en-UK')}</p>
-        <h2 class="text-xl font-bold">Patient</h2>
-        <p>CitizenId: {data.referral.CitizenId}</p>
-        <p>Gender: {data.referral.Gender}</p>
-        <p>Name: {getPrefix(data.referral.Prefix)} {data.referral.FirstName} {data.referral.LastName}</p>
-        <p>BirthDate: {data.referral.BirthDate}</p>
-        <p>Address: {data.referral.Address}</p>
-        <p>Telephone: {data.referral.Telephone}</p>
-    {/if}
+    {#await data.referral}
+        <p>Loading Referral...</p>
+    {:then referral} 
+        <ReferralView referral={referral}/>
+    {:catch}
+        <p>Error: Could not fetch referral</p>
+    {/await}
 </div>

@@ -89,3 +89,41 @@ export const setFormElement = (name: string, value: any)=>{
     const element = document.getElementsByName(name)[0] as HTMLInputElement
     element.value = value
 }
+
+export function translateReferralStatus(status: ReferralStatus){
+    switch(status){
+        case ReferralStatus.Created:
+            return "Awaiting Patient Consent"
+        case ReferralStatus.Consented:
+            return "Awaiting Destination Hospital"
+        case ReferralStatus.Complete:
+            return "Referral Complete"
+        case ReferralStatus.UploadIncomplete:
+            return "Uploading"
+        case ReferralStatus.Granted:
+            return "Preparing Data"
+        case ReferralStatus.UploadComplete:
+            return "Upload Complete"
+        case ReferralStatus.NotGranted:
+            return "Destination Denied Referral"
+        default:
+            return status
+    }
+}
+
+function getPrefix(p: string){
+    if(p == "mr"){
+        return "Mr."
+    }
+    else if(p == "mrs"){
+        return "Mrs."
+    }
+    else if(p == "ms"){
+        return "Ms."
+    }
+}
+
+export function translateName(prefix: string, firstName: string, lastName : string){
+    const pfx = getPrefix(prefix)
+    return `${pfx} ${firstName} ${lastName}`
+}

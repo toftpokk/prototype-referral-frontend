@@ -11,7 +11,6 @@
   </script>
   
   <DropdownMenu.Root>
-    <!-- <DropdownMenu.Trigger>Open</DropdownMenu.Trigger> -->
     <DropdownMenu.Trigger asChild let:builder>
       <Button builders={[builder]} variant="outline" class={cn("w-full caption-bottom text-sm", className)}>
         <slot/>

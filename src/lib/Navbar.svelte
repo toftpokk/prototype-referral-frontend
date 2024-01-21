@@ -1,7 +1,6 @@
 <script lang="ts">
     import UserMenu from "./UserMenu.svelte";
-    import usericon from '$lib/user.svg'
-    import chevronicon from '$lib/chevron-down.svg'
+    import { ChevronDown, Home, User } from "lucide-svelte";
 
     export let title : string;
     export let username : string = "";
@@ -9,16 +8,16 @@
 <nav class="flex justify-between px-8 py-4 border-b mb-4">
     <div class="flex gap-2">
         <a class="mt-1" href="/">
-            <img src="/icons/home.svg" alt="home" class="w-8"/>
+            <Home size="30" class="h-8"/>
         </a>
         
         <h2 class="text-2xl font-bold pt-1">{title}</h2>
     </div>
     <div class="my-auto">
         <UserMenu url="/logout">
-            <img src={usericon} alt="user" class="mr-1"/>
+            <User class="mr-1"/>
             {username}
-            <img src={chevronicon} alt="chevron" class="ml-1 w-4"/>
+            <ChevronDown class="w-4 h-4 ml-1"/>
         </UserMenu>
     </div>
 </nav>
