@@ -1,14 +1,10 @@
 <script lang="ts">
+    import spinner from '$lib/spinner.svg'
 import * as Table from "$lib/components/ui/table";
   import { Button } from "$lib/components/ui/button";
     import { ReferralStatus, type Referral } from "$lib/global";
     import TableMenu from "./TableMenu.svelte";
     export let data;
-    // let referrals = data.referrals as Referral[];
-    // referrals = referrals.map((r) => {
-    //     return { ...r, action: "View" };
-    // });
-    // rename
     function translateReferralStatus(status: ReferralStatus){
         switch(status){
             case ReferralStatus.Created:
@@ -62,8 +58,11 @@ import * as Table from "$lib/components/ui/table";
 </style>
 <div>
     {#await data.referrals}
-        <p>Naving</p>
-    {:then}
+    <div>
+        <div class="mx-auto w-[20rem] text-xl text-center">Loading...</div>
+        <img src={spinner} class="mx-auto mt-4 w-[3rem]"/>
+    </div>
+    {:then referrals}
          <!-- else content here -->
          <Button href="/">Dashboard</Button>
          <Table.Root class="max-w-[80rem] mx-auto">
@@ -79,7 +78,7 @@ import * as Table from "$lib/components/ui/table";
                  </Table.Row>
              </Table.Header>
              <Table.Body>
-                 {#each data.referrals as referral}
+                 {#each referrals as referral}
                      <Table.Row>
                          <Table.Cell class="text-right text-md">{referral.Id}</Table.Cell>
                          <Table.Cell>{`${referral.Prefix} ${referral.FirstName} ${referral.LastName}`}</Table.Cell>
@@ -102,5 +101,7 @@ import * as Table from "$lib/components/ui/table";
                  {/each}
              </Table.Body>
          </Table.Root>
+    {:catch}
+        <div class="mx-auto w-[20rem] text-xl text-center">Error: Could not load referral data</div>
     {/await}
 </div>
