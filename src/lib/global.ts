@@ -62,16 +62,16 @@ export type Referral = referralMeta & {
 }
 
 export type PatientData = {
-    hn: string;
-    citizenId: string;
-    prefix: string;
-    firstname: string;
-    lastname: string;
-    address: string;
-    birthDate: string;
-    gender: string;
-    email: string;
-    telephone: string;
+    Hn: string;
+    CitizenId: string;
+    Prefix: string;
+    Firstname: string;
+    Lastname: string;
+    Address: string;
+    BirthDate: string;
+    Gender: string;
+    Email: string;
+    Telephone: string;
 }
 
 export type Consent = {
@@ -82,14 +82,9 @@ export type Consent = {
 }
 
 export type HospitalData = {
-    hcode: string;
-    hname: string;
+    HospitalId: string;
+    HospitalName: string;
 }
-
-export const getPatientName = (p : PatientData)=>{
-    return `${p.prefix}. ${p.firstname} ${p.lastname}`
-}
-
 export const setFormElement = (name: string, value: any)=>{
     const element = document.getElementsByName(name)[0] as HTMLInputElement
     element.value = value

@@ -5,44 +5,12 @@
     import * as Dialog from "$lib/components/ui/dialog"
   import { Button, buttonVariants } from "$lib/components/ui/button";
     import { addSelectedRows } from "svelte-headless-table/plugins";
-const data = [
-  {
-    Hn: "12345",
-    CitizenId: "1232123213",
-    Prefix: "mr",
-    FirstName: "John",
-    LastName: "Smith",
-    Address: "234 Road Something",
-    BirthDate: "1990-05-04",
-    Gender: "male",
-    Email: "mail@mail",
-    Telephone: "0909876543",
-  },
-  {
-    Hn: "12346",
-    CitizenId: "12312323213321",
-    Prefix: "mrs",
-    FirstName: "William",
-    LastName: "Waters",
-    Address: "2-34 Vibhavadi Lat Yao Chatuchak Bangkok",
-    BirthDate: "1997-05-04",
-    Gender: "female",
-    Email: "will@mail",
-    Telephone: "0909122542",
-  },
-  {
-    Hn: "12347",
-    CitizenId: "0000000000000000",
-    Prefix: "ms",
-    FirstName: "Akaratara",
-    LastName: "Saengthong",
-    Address: "1 Mueng Thonburi",
-    BirthDate: "2002-05-04",
-    Gender: "male",
-    Email: "akara@mail",
-    Telephone: "0909872343",
-  },
+    import type { PatientData } from "$lib/global";
+
+export let data : PatientData[] = [
+
 ]
+// Table
 const table = createTable(readable(data),{
   select: addSelectedRows()
 })
@@ -83,7 +51,7 @@ const { headerRows, pageRows, tableAttrs, tableBodyAttrs } =
 function patientToName(p : any):string{
     return `${p.Prefix.toUpperCase()} ${p.FirstName} ${p.LastName}`
   }
-let selectedPatient : any = null
+let selectedPatientRow : any
 export let submit : Function
 let dialogOpen = false
 function setOpen(val:boolean){
@@ -121,7 +89,7 @@ export let dataView = "Find Patient"
         {#each $pageRows as row (row.id)}
           <Subscribe rowAttrs={row.attrs()} let:rowAttrs>
             <Table.Row {...rowAttrs} class="cursor-pointer select-none" on:click={()=>{
-              selectedPatient = row
+              selectedPatientRow = row
             }}>
               {#each row.cells as cell (cell.id)}
                 <Subscribe attrs={cell.attrs()} let:attrs>
@@ -135,12 +103,15 @@ export let dataView = "Find Patient"
         {/each}
       </Table.Body>
     </Table.Root>
+    {#if data.length == 0}
+      <p>Fetching data...</p>
+    {/if}
 
     <Dialog.Footer>
-      {#if selectedPatient}
-        <p class="py-2">Selected: {patientToName(selectedPatient.original)}</p>
+      {#if selectedPatientRow}
+        <p class="py-2">Selected: {patientToName(selectedPatientRow.original)}</p>
         <Button type="submit" on:click={()=>{
-          submit(selectedPatient.original)
+          submit(selectedPatientRow.original)
           setOpen(false)
         }}>Select Patient</Button>
       {:else}

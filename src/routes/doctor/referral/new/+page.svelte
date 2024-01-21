@@ -11,14 +11,16 @@
     import HospitalSearch from "./HospitalSearch.svelte";
     import Input from "$lib/components/ui/input/input.svelte";
     import DataSelect from "./DataSelect.svelte";
-  let value: DateValue | undefined = undefined;
+    import type { HospitalData, PatientData } from "$lib/global";
   const df = new DateFormatter("en-GB", {
     dateStyle: "long",
   });
   const labelClass = "font-semibold text-[11pt] block mb-1";
 
+  export let data
+
   // Patient
-  let patient : any
+  let patient : PatientData
   let selectPatient = (p:any)=>{
     patientButton = `${p.Hn.toUpperCase()} ${p.FirstName} ${p.LastName}`
     patient = p
@@ -26,20 +28,20 @@
   let patientButton = "Find Patient"
 
   // Hospital
-  let hospital : any
+  let hospital : HospitalData
   let selectHospital = (p:any)=>{
-    hospitalButton = `${p.Id}: ${p.Name}`
+    hospitalButton = `${p.HospitalId}: ${p.HospitalName}`
     hospital = p
   }
   let hospitalButton = "Find Destination"
 
   // Data
-  let data : any
-  let selectData = (p:any)=>{
-    dataButton = `${JSON.stringify(p)}`
-    data = p
+  let attachment : any
+  let selectAttachment = (p:any)=>{
+    attachmentButton = `${JSON.stringify(p)}`
+    attachment = p
   }
-  let dataButton = "Select Data"
+  let attachmentButton = "Select Data"
 
 </script>
 <!-- <PatientDialog patients={patients} bind:selectedPatient={selectedPatient} bind:dialogOpen={patientDialogOpen}/> -->
@@ -49,11 +51,23 @@
   <Label class="font-semibold text-[11pt] block mb-1"
     >Patient</Label
   >
-  <PatientSearch bind:submit={selectPatient} bind:dataView={patientButton}/>
+  {#await data.patients}
+    <p>Loading Patient List...</p>
+  {:then patients} 
+    <PatientSearch data={patients} bind:submit={selectPatient} bind:dataView={patientButton}/>
+  {:catch}
+    <p>Error loading patient list</p>
+  {/await}
   <Label class="font-semibold text-[11pt] block mb-1 mt-5"
     >Destination</Label
   >
-  <HospitalSearch bind:submit={selectHospital} bind:dataView={hospitalButton}/>
+  {#await data.hospitals}
+  <p>Loading Hospital List...</p>
+  {:then hospitals} 
+    <HospitalSearch data={hospitals} bind:submit={selectHospital} bind:dataView={hospitalButton}/>
+  {:catch}
+    <p>Error loading hospital list</p>
+  {/await}
   <Label for="Reason" class="font-semibold text-[11pt] block mb-1 mt-5"
     >Reason for Referral</Label
   >
@@ -72,7 +86,7 @@
   <Label class="font-semibold text-[11pt] block mb-1 mt-5"
     >Attach Documents</Label
   >
-  <DataSelect bind:submit={selectData} bind:dataView={dataButton}/>
+  <DataSelect bind:submit={selectAttachment} bind:dataView={attachmentButton}/>
   <Button type="submit" class="block w-full mt-5">Submit Referral</Button>
 </form>
 

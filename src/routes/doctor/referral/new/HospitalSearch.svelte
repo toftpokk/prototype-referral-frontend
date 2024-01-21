@@ -5,35 +5,27 @@
     import * as Dialog from "$lib/components/ui/dialog"
   import { Button, buttonVariants } from "$lib/components/ui/button";
     import { addSelectedRows } from "svelte-headless-table/plugins";
-const data = [
-  {
-    Id: "12345",
-    Name: "Hospital One",
-  },
-  {
-    Id: "67890",
-    Name: "Hospital Two",
-  },
-]
+    import type { HospitalData } from "$lib/global";
+export let data : HospitalData[] = []
 const table = createTable(readable(data),{
   select: addSelectedRows()
 })
 const columns = table.createColumns([
   table.column({
-    accessor: "Id",
+    accessor: "HospitalId",
     header: "ID"
   }),
   table.column({
-    accessor: "Name",
+    accessor: "HospitalName",
     header: "Name"
   }),
 ])
 const { headerRows, pageRows, tableAttrs, tableBodyAttrs } =
     table.createViewModel(columns,{
-      rowDataId: ({Id})=> Id
+      rowDataId: ({HospitalId})=> HospitalId
     });
 function patientToName(p : any):string{
-    return `${p.Id}: ${p.Name}`
+    return `${p.HospitalId}: ${p.HospitalName}`
   }
 let selectedPatient : any = null
 export let submit : Function
