@@ -1,37 +1,12 @@
 <script lang="ts">
 import * as Table from "$lib/components/ui/table";
-    import { ReferralStatus, type Referral, translateReferralStatus } from "$lib/global";
+    import {type Referral, translateHospital } from "$lib/global";
+    import ReferralStatusBadge from "./ReferralStatusBadge.svelte";
     import TableMenu from "./TableMenu.svelte";
 export let referrals : Referral[] = []
 export let referralLink : string = "/"
 
 </script>
-<style>
-    /* Errors */
-    .NotGranted{
-        @apply bg-red-300;
-    }
-    /* Action Needed */
-    .Created {
-        @apply bg-orange-300;
-    }
-    /* Action Not Needed */
-    .Consented{
-        @apply bg-gray-300;
-    }
-    .UploadIncomplete{
-        @apply bg-gray-300;
-    }
-    .Granted{
-        @apply bg-gray-300;
-    }
-    .UploadComplete {
-        @apply bg-green-300;
-    }
-    .Complete{
-        @apply bg-green-300;
-    }
-</style>
 <Table.Root class="">
     <Table.Header>
         <Table.Row>
@@ -49,14 +24,16 @@ export let referralLink : string = "/"
             <Table.Row>
                 <Table.Cell class="text-right text-md">{referral.Id}</Table.Cell>
                 <Table.Cell>{`${referral.Prefix} ${referral.FirstName} ${referral.LastName}`}</Table.Cell>
-                <Table.Cell>{referral.Destination}</Table.Cell>
+                {#await translateHospital(referral.Destination)}
+                    <Table.Cell>...</Table.Cell>
+                {:then value}
+                    <Table.Cell>{value}</Table.Cell>
+                {/await}
                 <Table.Cell>{(new Date(referral.Created)).toLocaleString('en-UK')}</Table.Cell>
                 <Table.Cell>{referral.Reason}</Table.Cell>
                 
                 <Table.Cell>
-                    <span class={referral.ReferralStatus+" inline-flex items-center border rounded-full px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none select-none focus:ring-2 focus:ring-ring focus:ring-offset-2"}>
-                        {translateReferralStatus(referral.ReferralStatus)}
-                    </span>
+                    <ReferralStatusBadge status={referral.ReferralStatus}/>
                 </Table.Cell>
                 <Table.Cell>
                     <TableMenu class="w-8 h-8 p-0" url={referralLink+"/"+referral.Id}>

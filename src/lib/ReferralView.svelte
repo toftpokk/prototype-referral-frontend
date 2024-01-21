@@ -1,17 +1,47 @@
 <script lang="ts">
-    import { translateName, type Referral, translateReferralStatus } from "./global";
-    export let referral : Referral
+    import ReferralStatusBadge from "./ReferralStatusBadge.svelte";
+import { Badge } from "./components/ui/badge";
+    import { translateName, type Referral, translateHospital } from "./global";
+    export let referral : Referral 
 </script>
+<style>
+    .key {
+        @apply font-semibold text-right pr-2 h-8 text-lg;
+    }
+    .val {
+        @apply pl-2 col-span-3 text-xl;
+    }
+</style>
 
-<h2 class="text-xl font-bold">Referral</h2>
-<p>referralId: {referral.Id}</p>
-<p>{translateReferralStatus(referral.ReferralStatus)}</p>
-<p>Destination: {referral.Destination}</p>
-<p>Creation Date: {new Date(referral.Created).toLocaleString('en-UK')}</p>
-<h2 class="text-xl font-bold">Patient</h2>
-<p>CitizenId: {referral.CitizenId}</p>
-<p>Gender: {referral.Gender}</p>
-<p>Name: {translateName(referral.Prefix, referral.FirstName, referral.LastName)}</p>
-<p>BirthDate: {referral.BirthDate}</p>
-<p>Address: {referral.Address}</p>
-<p>Telephone: {referral.Telephone}</p>
+<div class="grid grid-cols-4">
+    <div class="col-span-1"></div>
+    <div class="col-span-3 font-bold text-xl">Referral</div>
+    <div class="key">Status</div>
+    <div class="val"><ReferralStatusBadge status={referral.ReferralStatus} class="text-sm"/></div>
+    <div class="key">Destination</div>
+    {#await translateHospital(referral.Destination)}
+        <div class="val">...</div>
+    {:then name}
+        <div class="val">{name}</div>
+    {/await}
+    <div class="key">Reason</div>
+    <div class="val">{referral.Reason}</div>
+    <div class="key">Creation Date</div>
+    <div class="val">{new Date(referral.Created).toLocaleString('en-UK')}</div>
+    <div class="col-span-1"></div>
+    <div class="col-span-3 font-bold text-xl mt-4">Patient</div>
+    <div class="key">Name</div>
+    <div class="val">{translateName(referral.Prefix, referral.FirstName, referral.LastName)}</div>
+    <div class="key">Citizen ID</div>
+    <div class="val">{referral.CitizenId}</div>
+    <div class="key">Gender</div>
+    <div class="val">{referral.Gender}</div>
+    <div class="key">Birth Date</div>
+    <div class="val">{referral.BirthDate}</div>
+    <div class="key">Address</div>
+    <div class="val">{referral.Address}</div>
+    <div class="key">Email</div>
+    <div class="val">{referral.Email}</div>
+    <div class="key">Telephone</div>
+    <div class="val">{referral.Telephone}</div>
+</div>

@@ -1,3 +1,5 @@
+import { PUBLIC_CLIENT_FRONTEND_URL } from "$env/static/public";
+
 export enum ReferralStatus {
     Created = "Created",
     Consented = "Consented",
@@ -126,4 +128,29 @@ function getPrefix(p: string){
 export function translateName(prefix: string, firstName: string, lastName : string){
     const pfx = getPrefix(prefix)
     return `${pfx} ${firstName} ${lastName}`
+}
+
+let hospitalCache : HospitalData[] = []
+
+export async function translateHospital(hcode: string) : Promise<string>{
+    // Check if in cache
+    let filtered = hospitalCache.filter((d)=>d.HospitalId == hcode)
+    if(filtered.length > 0){
+        return filtered[0].HospitalName
+    }
+    // Not -> fetch
+    let response
+    try{
+        response = await fetch(PUBLIC_CLIENT_FRONTEND_URL + "/hospitals")
+        .then(d => d.json())
+    } catch(e){
+        return "Unknown Hospital"
+    }
+    hospitalCache = response
+    // Check in cache
+    filtered = hospitalCache.filter((d)=>d.HospitalId == hcode)
+    if(filtered.length > 0){
+        return filtered[0].HospitalName
+    }
+    return "Unknown Hospital"
 }
