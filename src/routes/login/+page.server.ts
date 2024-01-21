@@ -36,5 +36,10 @@ export const actions : import('./$types').Actions = {
         
         // Accepted
         throw redirect(303,"/staff")
+    },
+    "": async()=>{
+        return fail(400, {
+            error: "Test Error"
+        })
     }
 };

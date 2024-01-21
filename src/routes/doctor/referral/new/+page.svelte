@@ -44,9 +44,6 @@
   let attachmentButton = "Select Data"
 
 </script>
-<!-- <PatientDialog patients={patients} bind:selectedPatient={selectedPatient} bind:dialogOpen={patientDialogOpen}/> -->
-<!-- <HospitalDialog hospitals={hospitals} bind:selectedHospital={selectedHospital} bind:dialogOpen={hospitalDialogOpen} /> -->
-<!-- <DataDialog data={medicalData} bind:dialogOpen={dataDialogOpen} bind:selectedData={selectedData}/> -->
 <form class="mx-auto max-w-[40rem]">
   <Label class="font-semibold text-[11pt] block mb-1"
     >Patient</Label
@@ -89,9 +86,3 @@
   <DataSelect bind:submit={selectAttachment} bind:dataView={attachmentButton}/>
   <Button type="submit" class="block w-full mt-5">Submit Referral</Button>
 </form>
-
-<style>
-  .label {
-    @apply bg-red-400;
-  }
-</style>
