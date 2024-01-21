@@ -2,23 +2,35 @@
   import { Label } from "$lib/components/ui/label";
   import { Textarea } from "$lib/components/ui/textarea";
   import { Button } from "$lib/components/ui/button";
-  import {
-    type DateValue,
-    DateFormatter,
-    getLocalTimeZone,
-  } from "@internationalized/date";
+  import * as Select from "$lib/components/ui/select";
     import PatientSearch from "./PatientSearch.svelte";
     import HospitalSearch from "./HospitalSearch.svelte";
-    import Input from "$lib/components/ui/input/input.svelte";
     import DataSelect from "./DataSelect.svelte";
-    import type { HospitalData, PatientData } from "$lib/global";
-  const df = new DateFormatter("en-GB", {
-    dateStyle: "long",
-  });
+    import { type HospitalData, type PatientData, type referralMeta } from "$lib/global";
+    import { PUBLIC_HOSPITAL_ID } from "$env/static/public";
+    import * as Alert from "$lib/components/ui/alert";
+    import { goto } from "$app/navigation";
+    import Spinner from "$lib/Spinner.svelte";
   const labelClass = "font-semibold text-[11pt] block mb-1";
 
   export let data
+  let submitStatus = ""
+  let submitError = ""
 
+  // Data
+  const Departments : string[]= [
+    "Anesthesiology",
+    "Cardiology",
+    "Gynaecology",
+    "Pediatrics",
+    "Neurology",
+    "Oncology",
+    "Orthopaedic",
+    "Otolaryngology",
+    "Urology",
+    "Psychiatry",
+    "Radiology",
+  ]
   // Patient
   let patient : PatientData
   let selectPatient = (p:any)=>{
@@ -26,7 +38,6 @@
     patient = p
   }
   let patientButton = "Find Patient"
-
   // Hospital
   let hospital : HospitalData
   let selectHospital = (p:any)=>{
@@ -34,7 +45,6 @@
     hospital = p
   }
   let hospitalButton = "Find Destination"
-
   // Data
   let attachment : any
   let selectAttachment = (p:any)=>{
@@ -42,11 +52,78 @@
     attachment = p
   }
   let attachmentButton = "Select Data"
+  let selectedDept = {value: "", label:""} 
 
+  function onSubmit(e : SubmitEvent){
+    const errList : string[] = []
+    e.preventDefault()
+    if(!e.target){
+      submitError = "Fatal Error: Unable to find data"
+      return
+    }
+    const target : any = e.target
+    const formData = new FormData(target)
+    // Validation
+    if(!patient || !patient){
+      errList.push("Patient")
+    }
+    if(!hospital || !hospital.HospitalId){
+      errList.push("Destination")
+    }
+    const department : any = selectedDept.value
+    if(department== ""){
+      errList.push("Department")
+    }
+    const reason = formData.get("Reason") as string
+    if(reason== ""){
+      errList.push("Reason")
+    }
+    const history = formData.get("History") as string
+    if(history== ""){
+      errList.push("History")
+    }
+    const diagnosis = formData.get("Diagnosis") as string
+    if(diagnosis== ""){
+      errList.push("Diagnosis")
+    }
+    if(errList.length > 0){
+      submitError = errList.join(", ")
+      // return
+    }
+    submitError = ""
+    const submitData : referralMeta & {Diagnosis: string, History: string}= {
+      Origin: PUBLIC_HOSPITAL_ID,
+
+      CitizenId: patient.CitizenId,
+      Prefix: patient.Prefix,
+      FirstName: patient.Firstname,
+      LastName: patient.Lastname,
+      BirthDate: patient.BirthDate,
+      Address: patient.Address,
+      Gender: patient.Gender,
+      Telephone: patient.Telephone,
+      Email: patient.Email,
+
+      Destination: hospital.HospitalId,
+
+      Department: department,
+
+      Reason: reason,
+      History: history,
+      Diagnosis: diagnosis,
+      // TODO upload additional files
+    }
+    // submit doctorId as ? querystring
+    submitStatus = "submitting"
+  }
 </script>
-<form class="mx-auto max-w-[40rem]">
+{#if submitStatus == "submitting"}
+  <div class="mx-auto w-[20rem] text-xl text-center">Submitting...</div>
+  <Spinner class="mx-auto mt-4 w-[3rem]"/>
+{:else}
+<form class="mx-auto max-w-[40rem]" on:submit={onSubmit}>
   <Label class="font-semibold text-[11pt] block mb-1"
-    >Patient</Label
+    >Patient<span class="text-red-500">*</span></Label
   >
   {#await data.patients}
     <p>Loading Patient List...</p>
@@ -56,7 +133,7 @@
     <p>Error loading patient list</p>
   {/await}
   <Label class="font-semibold text-[11pt] block mb-1 mt-5"
-    >Destination</Label
+    >Destination<span class="text-red-500">*</span></Label
   >
   {#await data.hospitals}
   <p>Loading Hospital List...</p>
@@ -65,24 +142,46 @@
   {:catch}
     <p>Error loading hospital list</p>
   {/await}
-  <Label for="Reason" class="font-semibold text-[11pt] block mb-1 mt-5"
-    >Reason for Referral</Label
+  <Label class="font-semibold text-[11pt] block mb-1 mt-5" for="Department"
+    >Department<span class="text-red-500">*</span></Label
   >
-  <Textarea id="History">
+  <Select.Root bind:selected={selectedDept}>
+    <Select.Trigger id="Department">
+      <Select.Value placeholder="Select a Department to Refer" />
+    </Select.Trigger>
+    <Select.Content>
+      {#each Departments as dept}
+        <Select.Item value={dept}>{dept}</Select.Item>
+      {/each}
+    </Select.Content>
+  </Select.Root>
+  <Label for="Reason" class="font-semibold text-[11pt] block mb-1 mt-5"
+    >Reason for Referral<span class="text-red-500">*</span></Label
+  >
+  <Textarea id="Reason" name="Reason">
   </Textarea>
   <Label for="History" class="font-semibold text-[11pt] block mb-1 mt-5"
-    >Medical History</Label
+    >Medical History<span class="text-red-500">*</span></Label
   >
-  <Textarea id="History">
+  <Textarea id="History" name="History">
   </Textarea>
   <Label for="Diagnosis" class="font-semibold text-[11pt] block mb-1 mt-5"
-    >Examination & Diagnosis</Label
+    >Examination & Diagnosis<span class="text-red-500">*</span></Label
   >
-  <Textarea id="Diagnosis">
+  <Textarea id="Diagnosis" name="Diagnosis">
   </Textarea>
   <Label class="font-semibold text-[11pt] block mb-1 mt-5"
-    >Attach Documents</Label
+    >Additional Referral Documents</Label
   >
   <DataSelect bind:submit={selectAttachment} bind:dataView={attachmentButton}/>
+  {#if submitError != ""}
+    <Alert.Root class="my-4" variant="destructive">
+      <Alert.Title>Error: Incomplete Fields</Alert.Title>
+      <Alert.Description>
+        {submitError}
+      </Alert.Description>
+    </Alert.Root>
+  {/if}
   <Button type="submit" class="block w-full mt-5">Submit Referral</Button>
 </form>
+{/if}
