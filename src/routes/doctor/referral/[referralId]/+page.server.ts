@@ -3,11 +3,26 @@ import type { Referral } from "$lib/global"
 
 export const load = async ({ params }) => {
     const referralId = params.referralId
-    let response = await fetch(PUBLIC_CLIENT_FRONTEND_URL+"/referral/"+referralId)
-    let fetchData : Referral = await response.json()
-    return {
-        title: "Referral",
-        referralId: referralId,
-        referral: fetchData
+    let response : Response
+    try {
+        // TODO
+        response = await fetch(PUBLIC_CLIENT_FRONTEND_URL+"/referral/"+referralId)
+        if(!response.ok){
+            console.log(await response.text())
+            throw new Error("Could not fetch from referral system client: "+response.statusText);
+        }
+    } catch (error) {
+        return {
+            title: "Referral Cases",
+            referral: {},
+            error: String(error),
+            referralId: referralId,
+        }
     }
+    let fetchData : {"referral":Referral} = await response.json()
+    return {
+        referral: fetchData,
+        title: "Referral Cases",
+        referralId: referralId,
+    } 
 }

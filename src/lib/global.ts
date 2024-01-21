@@ -1,12 +1,11 @@
 export enum ReferralStatus {
-    PreparingData = "PreparingData",
     Created = "Created",
-    AwaitingConsent = "AwaitingConsent",
-    ConsentGiven = "ConsentGiven",
-    AwaitingConfirmation = "AwaitingConfirmation",
-    TransferringData = "TransferringData",
-    AwaitingCompletion = "AwaitingCompletion",
+    Consented = "Consented",
     Complete = "Complete",
+    Granted = "Granted",
+    UploadIncomplete = "UploadIncomplete",
+    UploadComplete = "UploadComplete",
+    NotGranted = "NotGranted",
 }
 
 export enum GrantStatus {
@@ -54,7 +53,7 @@ export type referralMeta = {
 export type Referral = referralMeta & {
     //// Server->Dest ////
     Id: number; // not autogen
-    CreationDate: number;
+    Created: number;
 
     //// Not sent ////
     DoctorId: string;
