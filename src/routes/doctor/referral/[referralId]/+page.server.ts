@@ -12,7 +12,7 @@ export const load : PageServerLoad = ({ params }) => {
         })
     return {
         referral: response as Promise<Referral>,
-        title: "Referral Cases",
+        title: "Referral "+referralId,
         referralId: referralId,
     } 
 }

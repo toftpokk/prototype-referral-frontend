@@ -2,24 +2,20 @@ import { PUBLIC_CLIENT_FRONTEND_URL } from "$env/static/public";
 import type { Referral } from "$lib/global"
 import { error } from "@sveltejs/kit";
 
-export async function load(){
-    let response : Response
-    try {
-        // TODO
-        response = await fetch(PUBLIC_CLIENT_FRONTEND_URL+"/staff/referral?Id=1111")
-        if(!response.ok){
-            throw new Error("Could not connect to client");
-        }
-    } catch (error) {
-        return {
-            title: "Referral Cases",
-            referrals: [],
-            error: "Error: Could not connect to referral system client"
-        }
-    }
-    let fetchData : Referral[] = await response.json()
+export function load(){
+    const response = fetch(PUBLIC_CLIENT_FRONTEND_URL+"/")
+        .then(d=>d.json())
+        .then((d:{"referrals":Referral[]})=>d["referrals"]
+            .sort((a,b)=>{
+                return a.Id > b.Id ? -1 : 1
+            })
+        )
+        .catch((e)=>{
+            console.log(e)
+            return new Error("a")
+        })
     return {
-        referrals: fetchData,
-        title: "Referral Cases"
+        title: "Referral Cases",
+        referrals: response as Promise<Referral[]>,
     } 
 }

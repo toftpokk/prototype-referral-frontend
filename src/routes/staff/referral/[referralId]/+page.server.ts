@@ -1,20 +1,18 @@
 import { PUBLIC_CLIENT_FRONTEND_URL } from "$env/static/public"
 import type { Referral } from "$lib/global"
+import type { PageServerLoad } from "./$types"
 
-export const load = async ({ params }) => {
+export const load : PageServerLoad = ({ params }) => {
     const referralId = params.referralId
-    let fetchData : Referral
-    try{
-        let response = await fetch(PUBLIC_CLIENT_FRONTEND_URL+"/referral/"+referralId)
-        fetchData = await response.json()
-    } catch(e){
-        return {
-            error: String(e)
-        }
-    }
+    const response = fetch(PUBLIC_CLIENT_FRONTEND_URL+"/referral/"+referralId)
+        .then(d=>d.json())
+        .catch((e)=>{
+            console.log(e)
+            return new Error("a")
+        })
     return {
-        title: "Referral",
+        referral: response as Promise<Referral>,
+        title: "Referral "+referralId,
         referralId: referralId,
-        referral: fetchData
-    }
+    } 
 }
