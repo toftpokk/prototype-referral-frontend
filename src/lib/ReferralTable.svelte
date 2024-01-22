@@ -1,6 +1,6 @@
 <script lang="ts">
 import * as Table from "$lib/components/ui/table";
-    import {type Referral, translateHospital } from "$lib/global";
+    import {type Referral, translateHospital, translateName } from "$lib/global";
     import ReferralStatusBadge from "./ReferralStatusBadge.svelte";
     import TableMenu from "./TableMenu.svelte";
 export let referrals : Referral[] = []
@@ -23,7 +23,7 @@ export let referralLink : string = "/"
         {#each referrals as referral}
             <Table.Row>
                 <Table.Cell class="text-right text-md">{referral.Id}</Table.Cell>
-                <Table.Cell>{`${referral.Prefix} ${referral.FirstName} ${referral.LastName}`}</Table.Cell>
+                <Table.Cell>{translateName(referral)}</Table.Cell>
                 {#await translateHospital(referral.Destination)}
                     <Table.Cell>...</Table.Cell>
                 {:then value}

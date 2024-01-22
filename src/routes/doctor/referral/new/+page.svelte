@@ -62,7 +62,7 @@
     if(!e.target){
       submitErrorTitle = "Fatal Error"
       submitError = "Unable to find data"
-      return
+      return false
     }
     const target : any = e.target
     const formData = new FormData(target)
@@ -92,11 +92,11 @@
     if(errList.length > 0){
       submitErrorTitle = "Validation Error"
       submitError = "Required Fields: "+errList.join(", ")
-      return
+      return false
     }
     submitError = ""
     const submitData : referralMeta & {Diagnosis: string, History: string}= {
-      Origin: PUBLIC_HOSPITAL_ID,
+      Origin: PUBLIC_HOSPITAL_ID, // Sent, but not used
 
       CitizenId: patient.CitizenId,
       Prefix: patient.Prefix,
