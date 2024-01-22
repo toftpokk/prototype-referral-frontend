@@ -1,152 +1,92 @@
 <script lang="ts">
-    import * as Table from "$lib/components/ui/table";
-    import { createTable, Render, Subscribe } from "svelte-headless-table";
-    import { readable } from "svelte/store";
-    import * as Dialog from "$lib/components/ui/dialog"
+  import * as Dialog from "$lib/components/ui/dialog";
   import { Button, buttonVariants } from "$lib/components/ui/button";
-    import { addSelectedRows } from "svelte-headless-table/plugins";
-const data = [
-  {
-    Hn: "12345",
-    CitizenId: "1232123213",
-    Prefix: "mr",
-    FirstName: "John",
-    LastName: "Smith",
-    Address: "234 Road Something",
-    BirthDate: "1990-05-04",
-    Gender: "male",
-    Email: "mail@mail",
-    Telephone: "0909876543",
-  },
-  {
-    Hn: "12346",
-    CitizenId: "12312323213321",
-    Prefix: "mrs",
-    FirstName: "William",
-    LastName: "Waters",
-    Address: "2-34 Vibhavadi Lat Yao Chatuchak Bangkok",
-    BirthDate: "1997-05-04",
-    Gender: "female",
-    Email: "will@mail",
-    Telephone: "0909122542",
-  },
-  {
-    Hn: "12347",
-    CitizenId: "0000000000000000",
-    Prefix: "ms",
-    FirstName: "Akaratara",
-    LastName: "Saengthong",
-    Address: "1 Mueng Thonburi",
-    BirthDate: "2002-05-04",
-    Gender: "male",
-    Email: "akara@mail",
-    Telephone: "0909872343",
-  },
-]
-const table = createTable(readable(data),{
-  select: addSelectedRows()
-})
-const columns = table.createColumns([
-  table.column({
-    accessor: "Hn",
-    header: "HN"
-  }),
-  table.column({
-    accessor: "CitizenId",
-    header: "Citizen ID"
-  }),
-  table.column({
-    accessor: patientToName,
-    header: "Name"
-  }),
-  table.column({
-    accessor: "BirthDate",
-    header: "Birthday"
-  }),
-  table.column({
-    accessor: "Gender",
-    header: "Gender"
-  }),
-  table.column({
-    accessor: "Email",
-    header: "Email"
-  }),
-  table.column({
-    accessor: "Telephone",
-    header: "Telephone"
-  }),
-])
-const { headerRows, pageRows, tableAttrs, tableBodyAttrs } =
-    table.createViewModel(columns,{
-      rowDataId: ({Hn})=> Hn
-    });
-function patientToName(p : any):string{
-    return `${p.Prefix.toUpperCase()} ${p.FirstName} ${p.LastName}`
+  import { PUBLIC_CLIENT_FRONTEND_URL } from "$env/static/public";
+  import Summary from "./Summary.svelte";
+
+  export let patientId: string;
+  let data: Promise<Data>;
+  async function getData(pId: string) {
+    return fetch(PUBLIC_CLIENT_FRONTEND_URL + "/patient/" + pId + "/summary", {
+      method: "GET",
+    })
+      .then(async (d: Response) => {
+        if (d.status != 200) {
+          throw await d.json();
+        }
+        return d.json();
+      })
+      .catch((e) => {
+        return console.log(e);
+      });
   }
-let selectedPatient : any = null
-export let submit : Function
-let dialogOpen = false
-function setOpen(val:boolean){
-  dialogOpen = val
-}
-export let dataView = "Find Patient"
+  $: if (patientId) {
+    data = getData(patientId);
+  }
+  type Data = {
+    Id: string;
+    Name: string;
+    Reason: string;
+    Start: string;
+    Observations: {
+      Id: string;
+      Encounter: string;
+      Name: string;
+      Value: string;
+      Unit: string;
+    }[];
+  }[];
+  // Submission
+  export let submit: Function;
+  let dialogOpen = false;
+  function setOpen(val: boolean) {
+    dialogOpen = val;
+  }
+  export let dataView = "Find Patient Data";
+  let checks: Record<string, boolean> = {};
 </script>
 
 <Dialog.Root open={dialogOpen} onOpenChange={setOpen}>
-  <Dialog.Trigger class={buttonVariants({ variant: "outline" })+" w-full text-start ps-0"} 
-    ><span class="w-full pl-3">{dataView}</span></Dialog.Trigger
+  <Dialog.Trigger
+    class={buttonVariants({ variant: "outline" }) + " w-full text-start ps-0"}
   >
+    <span class="w-full pl-3">{dataView}</span>
+  </Dialog.Trigger>
+  {#await data}
+    <p>Loading data...</p>
+  {:then dataVal}
+    {#each Object.keys(checks) as check}
+      {@const checkObject = dataVal.filter((a) => a.Id == check)[0]}
+      <p class="my-4">
+        <span class="text-muted-foreground mx-4">
+          {checkObject.Start.substring(0, 10)}
+        </span>{checkObject.Name}
+      </p>
+    {:else}
+      <span class="w-full pl-3"></span>
+    {/each}
+  {:catch error}
+    <p>Data load error: {error}</p>
+  {/await}
   <Dialog.Content class="sm:max-w-[60rem]">
     <Dialog.Header>
-      <Dialog.Title>Find Patient</Dialog.Title>
+      <Dialog.Title>Select Data</Dialog.Title>
     </Dialog.Header>
 
-    <Table.Root {...$tableAttrs} class="w-full">
-      <Table.Header>
-        {#each $headerRows as headerRow}
-          <Subscribe rowAttrs={headerRow.attrs()}>
-            <Table.Row>
-              {#each headerRow.cells as cell (cell.id)}
-                <Subscribe attrs={cell.attrs()} let:attrs props={cell.props()}>
-                  <Table.Head {...attrs}>
-                    <Render of={cell.render()} />
-                  </Table.Head>
-                </Subscribe>
-              {/each}
-            </Table.Row>
-          </Subscribe>
-        {/each}
-      </Table.Header>
-      <Table.Body {...$tableBodyAttrs}>
-        {#each $pageRows as row (row.id)}
-          <Subscribe rowAttrs={row.attrs()} let:rowAttrs>
-            <Table.Row {...rowAttrs} class="cursor-pointer select-none" on:click={()=>{
-              selectedPatient = row
-            }}>
-              {#each row.cells as cell (cell.id)}
-                <Subscribe attrs={cell.attrs()} let:attrs>
-                  <Table.Cell {...attrs}>
-                    <Render of={cell.render()} />
-                  </Table.Cell>
-                </Subscribe>
-              {/each}
-            </Table.Row>
-          </Subscribe>
-        {/each}
-      </Table.Body>
-    </Table.Root>
-
+    {#await data}
+      <p>Loading data...</p>
+    {:then dataVal}
+      <Summary data={dataVal} bind:checks />
+    {:catch error}
+      <p>Data load error: {error}</p>
+    {/await}
     <Dialog.Footer>
-      {#if selectedPatient}
-        <p class="py-2">Selected: {patientToName(selectedPatient.original)}</p>
-        <Button type="submit" on:click={()=>{
-          submit(selectedPatient.original)
-          setOpen(false)
-        }}>Select Patient</Button>
-      {:else}
-        <p class="py-2">No patient selected</p>
-        <Button type="submit" class="bg-slate-300 hover:bg-slate-300">Select Patient</Button>
-      {/if}      
+      <Button
+        on:click={() => {
+          submit(checks);
+          setOpen(false);
+        }}>Submit</Button
+      >
     </Dialog.Footer>
   </Dialog.Content>
 </Dialog.Root>

@@ -11,6 +11,7 @@
     import * as Alert from "$lib/components/ui/alert";
     import { goto } from "$app/navigation";
     import Spinner from "$lib/Spinner.svelte";
+    import Input from "$lib/components/ui/input/input.svelte";
   const labelClass = "font-semibold text-[11pt] block mb-1";
 
   export let data
@@ -38,6 +39,7 @@
   let selectPatient = (p:any)=>{
     patientButton = `${p.Hn.toUpperCase()} ${p.FirstName} ${p.LastName}`
     patient = p
+    attachment = null // select new patient, clear data
   }
   let patientButton = "Find Patient"
   // Hospital
@@ -50,12 +52,12 @@
   // Data
   let attachment : any
   let selectAttachment = (p:any)=>{
-    attachmentButton = `${JSON.stringify(p)}`
+    attachmentButton = true
     attachment = p
   }
-  let attachmentButton = "Select Data"
+  let attachmentButton = false
   let selectedDept = {value: "", label:""}
-
+  let files : FileList
   function onSubmit(e : SubmitEvent){
     const errList : string[] = []
     e.preventDefault()
@@ -92,9 +94,14 @@
     if(errList.length > 0){
       submitErrorTitle = "Validation Error"
       submitError = "Required Fields: "+errList.join(", ")
-      return false
+      // return false
     }
     submitError = ""
+    // console.log("a",file)
+    for(const file of files){
+      console.log(file)
+    }
+    return false
     const submitData : referralMeta & {Diagnosis: string, History: string}= {
       Origin: PUBLIC_HOSPITAL_ID, // Sent, but not used
 
@@ -146,7 +153,6 @@
 {:else if submitStatus == "complete"}
 <div class="mx-auto w-[20rem] text-xl text-center">Submission Complete</div>
 <div class="mx-auto w-[20rem] text-2xl mt-8 text-center">Referral ID: {referralId}</div>
-<!-- <a>&larr; a</a> -->
 <div class="mx-auto text-center">
   <Button href={"/doctor/referral/"+referralId}>View Referral</Button>
   <Button variant="outline" class="inline-block mt-8" href="/doctor">Return to List</Button>
@@ -204,7 +210,11 @@
   <Label class="font-semibold text-[11pt] block mb-1 mt-5"
     >Additional Referral Documents</Label
   >
-  <DataSelect bind:submit={selectAttachment} bind:dataView={attachmentButton}/>
+  {#if patient}
+     <DataSelect bind:submit={selectAttachment} patientId={patient.CitizenId}/>
+  {:else}
+     <Input value="Select a patient before adding documents" disabled/>
+  {/if}
   {#if submitError != ""}
     <Alert.Root class="my-4" variant="destructive">
       <Alert.Title>Submission Error</Alert.Title>
@@ -213,6 +223,12 @@
       </Alert.Description>
     </Alert.Root>
   {/if}
+  <Label class="font-semibold text-[11pt] block mb-1 mt-5"
+    >Upload Files</Label
+  >
+  <input multiple id="picture" type="file" bind:files={files}
+    class="flex h-10 w-full rounded-md border shadow-sm border-input bg-transparent px-3 py-2 text-sm ring-offset-background file:border-0  file:bg-transparent file:text-foreground file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+  />
   <Button type="submit" class="block w-full mt-5">Submit Referral</Button>
 </form>
 {/if}
