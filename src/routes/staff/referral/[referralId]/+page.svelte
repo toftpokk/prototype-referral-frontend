@@ -4,7 +4,6 @@
     import ReferralView from '$lib/ReferralView.svelte';
     import { Button } from '$lib/components/ui/button';
     import { ReferralStatus } from '$lib/global';
-    import GrantDialog from './GrantDialog.svelte';
     export let data : import('./$types').PageData;
     let grantError = ""
     const grant = (verdict: boolean)=>()=>{

@@ -4,10 +4,8 @@
     import ReferralView from '$lib/ReferralView.svelte';
     import { Button } from '$lib/components/ui/button';
     import { ReferralStatus } from '$lib/global';
-    import ConsentDialog from '../../ConsentDialog.svelte';
 
     export let data : import('./$types').PageData;
-    let dialogOpen : Function
     let consentError = ""
     function giveConsent(){
         const response = fetch(PUBLIC_SERVER_FRONTEND_URL+"/referral/"+data.referralId+"/consent",{
@@ -22,7 +20,6 @@
         })
     }
 </script>
-<ConsentDialog bind:dialogOpen={dialogOpen}/>
 <div class="mx-auto max-w-[40rem]">
     {#await data.referral}
         <p>Loading Referral...</p>
