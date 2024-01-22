@@ -1,24 +1,27 @@
-import { PUBLIC_SERVER_FRONTEND_URL } from "$env/static/public";
+import { PUBLIC_CLIENT_FRONTEND_URL, PUBLIC_SERVER_FRONTEND_URL } from "$env/static/public";
 import type { Referral } from "$lib/global"
 import { error } from "@sveltejs/kit";
+import type { PageServerLoad } from "./$types";
 
-export async function load(){
-    let response : Response
-    try {
-        response = await fetch(PUBLIC_SERVER_FRONTEND_URL+"/referral?Id=1232123213")
-        if(!response.ok){
-            throw new Error("Could not connect to server");
-        }
-    } catch (error) {
-        return {
-            title: "Referral Cases",
-            referrals: [],
-            error: "Error: Could not connect to referral system server"
-        }
-    }
-    let fetchData : Referral[] = await response.json()
+export function load(){
+    const response = fetch(PUBLIC_SERVER_FRONTEND_URL+"/")
+        .then(async (d: Response)=>{
+            if(d.status != 200){
+                throw await d.json()
+            }
+            return d.json()
+        })
+        .then((d:{"referrals":Referral[]})=>d["referrals"]
+            .sort((a,b)=>{
+                return a.Id > b.Id ? -1 : 1
+            })
+        )
+        .catch((e)=>{
+            console.log(e)
+            return new Error("a")
+        })
     return {
-        referrals: fetchData,
-        title: "My Referrals"
+        title: "Referral Cases",
+        referrals: response as Promise<Referral[]>,
     } 
 }

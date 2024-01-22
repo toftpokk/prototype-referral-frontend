@@ -142,7 +142,12 @@ export async function translateHospital(hcode: string) : Promise<string>{
     let response
     try{
         response = await fetch(PUBLIC_CLIENT_FRONTEND_URL + "/hospitals")
-        .then(d => d.json())
+        .then(async (d: Response)=>{
+            if(d.status != 200){
+                throw await d.json()
+            }
+            return d.json()
+        })
     } catch(e){
         return "Unknown Hospital"
     }

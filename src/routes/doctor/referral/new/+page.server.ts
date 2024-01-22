@@ -2,14 +2,23 @@ import { PUBLIC_CLIENT_FRONTEND_URL } from '$env/static/public'
 import type { HospitalData, PatientData } from '$lib/global'
 
 export const load = ({ params }) => {
-
   const response = fetch(PUBLIC_CLIENT_FRONTEND_URL + "/patients")
-    .then(d => d.json())
+  .then(async (d: Response)=>{
+      if(d.status != 200){
+          throw await d.json()
+      }
+      return d.json()
+  })
     .catch((e) => {
       return new Error("a")
     })
     const response2 = fetch(PUBLIC_CLIENT_FRONTEND_URL + "/hospitals")
-    .then(d => d.json())
+    .then(async (d: Response)=>{
+        if(d.status != 200){
+            throw await d.json()
+        }
+        return d.json()
+    })
     .catch((e) => {
       return new Error("a")
     })

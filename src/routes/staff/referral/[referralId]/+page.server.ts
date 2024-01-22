@@ -5,7 +5,12 @@ import type { PageServerLoad } from "./$types"
 export const load : PageServerLoad = ({ params }) => {
     const referralId = params.referralId
     const response = fetch(PUBLIC_CLIENT_FRONTEND_URL+"/referral/"+referralId)
-        .then(d=>d.json())
+    .then(async (d: Response)=>{
+        if(d.status != 200){
+            throw await d.json()
+        }
+        return d.json()
+    })
         .catch((e)=>{
             console.log(e)
             return new Error("a")

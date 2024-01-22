@@ -1,37 +1,22 @@
 import { PUBLIC_SERVER_FRONTEND_URL } from "$env/static/public"
-import type { Referral, Consent } from "$lib/global"
+import type { Referral } from "$lib/global"
+import type { PageServerLoad } from "./$types"
 
-export const load = async ({ params }) => {
+export const load : PageServerLoad = ({ params }) => {
     const referralId = params.referralId
-    let response : Response
-    let fetchData : Referral
-    let fetchConsents : Consent[]
-    try{
-        response = await fetch(PUBLIC_SERVER_FRONTEND_URL+"/referral/"+referralId)
-        fetchData = await response.json()
-        if(!response.ok){
-            throw new Error("Could not get referral data")
-        }
-    } catch(e){
-        return {
-            error: String(e)
-        }
-    }
-    try {
-        response = await fetch(PUBLIC_SERVER_FRONTEND_URL+"/referral/"+referralId+"/consent")
-        fetchConsents = await response.json()
-        if(!response.ok){
-            throw new Error("Could not get consent data")
-        }
-    } catch(e){
-        return {
-            error: String(e)
-        }
-    }
+    const response = fetch(PUBLIC_SERVER_FRONTEND_URL+"/referral/"+referralId)
+        .then(async (d: Response)=>{
+            if(d.status != 200){
+                throw await d.json()
+            }
+            return d.json()
+        })
+        .catch((e)=>{
+            return new Error("a")
+        })
     return {
-        title: "Referral",
+        title: "Referral "+referralId,
         referralId: referralId,
-        referral: fetchData,
-        consent: fetchConsents
-    }
+        referral: response as Promise<Referral>,
+    } 
 }

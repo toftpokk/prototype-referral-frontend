@@ -21,11 +21,17 @@ import { Badge } from "./components/ui/badge";
     <div class="val">{referralId}</div>
     <div class="key">Status</div>
     <div class="val"><ReferralStatusBadge status={referral.ReferralStatus} class="text-sm"/></div>
+    <div class="key">Origin</div>
+    {#await translateHospital(referral.Origin)}
+        <div class="val">...</div>
+    {:then name}
+        <div class="val">{name} ({referral.Origin})</div>
+    {/await}
     <div class="key">Destination</div>
     {#await translateHospital(referral.Destination)}
         <div class="val">...</div>
     {:then name}
-        <div class="val">{name}</div>
+        <div class="val">{name} ({referral.Destination})</div>
     {/await}
     <div class="key">Reason</div>
     <div class="val">{referral.Reason}</div>

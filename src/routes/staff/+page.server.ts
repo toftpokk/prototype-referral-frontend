@@ -4,7 +4,12 @@ import { error } from "@sveltejs/kit";
 
 export function load(){
     const response = fetch(PUBLIC_CLIENT_FRONTEND_URL+"/")
-        .then(d=>d.json())
+    .then(async (d: Response)=>{
+        if(d.status != 200){
+            throw await d.json()
+        }
+        return d.json()
+    })
         .then((d:{"referrals":Referral[]})=>d["referrals"]
             .sort((a,b)=>{
                 return a.Id > b.Id ? -1 : 1
