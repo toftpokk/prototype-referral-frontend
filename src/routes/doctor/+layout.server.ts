@@ -10,6 +10,7 @@ export const load: import('./$types').LayoutServerLoad = ({cookies}) => {
         return redirect(303,"/login")
     }
     return {
+        role,
         username
     }
 }

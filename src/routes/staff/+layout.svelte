@@ -4,7 +4,7 @@
 
     export let data;
 </script>
-<Navbar title={$page.data.title} username={data.username}/>
+<Navbar title={$page.data.title} username={data.username} role={data.role}/>
 <div class="px-5">
     <slot></slot>
 </div>
