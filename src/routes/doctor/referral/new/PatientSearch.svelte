@@ -5,7 +5,7 @@
     import * as Dialog from "$lib/components/ui/dialog"
   import { Button, buttonVariants } from "$lib/components/ui/button";
     import { addSelectedRows } from "svelte-headless-table/plugins";
-    import type { PatientData } from "$lib/global";
+    import { translateName, type PatientData } from "$lib/global";
 
 export let data : PatientData[] = [
 
@@ -24,7 +24,7 @@ const columns = table.createColumns([
     header: "Citizen ID"
   }),
   table.column({
-    accessor: patientToName,
+    accessor: translateName,
     header: "Name"
   }),
   table.column({
@@ -48,9 +48,6 @@ const { headerRows, pageRows, tableAttrs, tableBodyAttrs } =
     table.createViewModel(columns,{
       rowDataId: ({Hn})=> Hn
     });
-function patientToName(p : any):string{
-    return `${p.Prefix.toUpperCase()} ${p.FirstName} ${p.LastName}`
-  }
 let selectedPatientRow : any
 export let submit : Function
 let dialogOpen = false
@@ -68,8 +65,8 @@ export let dataView = "Find Patient"
     <Dialog.Header>
       <Dialog.Title>Find Patient</Dialog.Title>
     </Dialog.Header>
-
-    <Table.Root {...$tableAttrs} class="w-full">
+    <div class="h-[25rem] overflow-scroll">
+    <Table.Root {...$tableAttrs}>
       <Table.Header>
         {#each $headerRows as headerRow}
           <Subscribe rowAttrs={headerRow.attrs()}>
@@ -103,13 +100,14 @@ export let dataView = "Find Patient"
         {/each}
       </Table.Body>
     </Table.Root>
+    </div>
     {#if data.length == 0}
       <p>Fetching data...</p>
     {/if}
 
     <Dialog.Footer>
       {#if selectedPatientRow}
-        <p class="py-2">Selected: {patientToName(selectedPatientRow.original)}</p>
+        <p class="py-2">Selected: {translateName(selectedPatientRow.original)}</p>
         <Button type="submit" on:click={()=>{
           submit(selectedPatientRow.original)
           setOpen(false)

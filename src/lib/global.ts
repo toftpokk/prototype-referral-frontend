@@ -125,9 +125,9 @@ function getPrefix(p: string){
     }
 }
 
-export function translateName(prefix: string, firstName: string, lastName : string){
-    const pfx = getPrefix(prefix)
-    return `${pfx} ${firstName} ${lastName}`
+export function translateName(obj : {Prefix: string, FirstName: string, LastName : string}){
+    const pfx = getPrefix(obj.Prefix)
+    return `${pfx} ${obj.FirstName} ${obj.LastName}`
 }
 
 let hospitalCache : HospitalData[] = []

@@ -40,7 +40,7 @@ import { Badge } from "./components/ui/badge";
     <div class="col-span-1"></div>
     <div class="col-span-3 font-bold text-xl mt-4">Patient</div>
     <div class="key">Name</div>
-    <div class="val">{translateName(referral.Prefix, referral.FirstName, referral.LastName)}</div>
+    <div class="val">{translateName(referral)}</div>
     <div class="key">Citizen ID</div>
     <div class="val">{referral.CitizenId}</div>
     <div class="key">Gender</div>
