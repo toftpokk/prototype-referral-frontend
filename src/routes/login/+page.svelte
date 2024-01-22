@@ -22,7 +22,6 @@
             <form method="POST" action={"?/"+role.value} class="flex flex-col max-w-[30rem] mx-auto w-full px-10 gap-3" use:enhance>
                 {#if form?.error}
                 <Alert.Root variant="destructive">
-                    <!-- <ExclamationTriangle class="h-4 w-4" /> -->
                     <Alert.Title>No Role selected</Alert.Title>
                     <Alert.Description>
                         Please select a role
