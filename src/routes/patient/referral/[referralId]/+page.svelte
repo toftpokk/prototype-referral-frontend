@@ -23,19 +23,18 @@
     }
 </script>
 <ConsentDialog bind:dialogOpen={dialogOpen}/>
-<div>
+<div class="mx-auto max-w-[40rem]">
     {#await data.referral}
         <p>Loading Referral...</p>
     {:then referral} 
         <ReferralView referral={referral} referralId={data.referralId}/>
         {#if consentError}
                 <p>Consent Error: {consentError}</p>
+        {/if}
+        {#if referral.ReferralStatus == ReferralStatus.Created}
+            <Button class="btn-alt" on:click={giveConsent}>Give Consent to Referral</Button>
         {:else}
-            {#if referral.ReferralStatus == ReferralStatus.Created}
-                <Button class="btn-alt" on:click={giveConsent}>Give Consent to Referral</Button>
-            {:else}
-                <p>Consent given, transferring data...</p>
-            {/if}
+            <p>Consent given, transferring data...</p>
         {/if}
     {:catch}
         <p>Error: Could not fetch referral</p>
