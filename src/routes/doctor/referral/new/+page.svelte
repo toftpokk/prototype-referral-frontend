@@ -7,7 +7,7 @@
     import HospitalSearch from "./HospitalSearch.svelte";
     import DataSelect from "./DataSelect.svelte";
     import { type HospitalData, type PatientData, type referralMeta } from "$lib/global";
-    import { PUBLIC_HOSPITAL_ID } from "$env/static/public";
+    import { PUBLIC_CLIENT_FRONTEND_URL, PUBLIC_HOSPITAL_ID } from "$env/static/public";
     import * as Alert from "$lib/components/ui/alert";
     import { goto } from "$app/navigation";
     import Spinner from "$lib/Spinner.svelte";
@@ -15,7 +15,9 @@
 
   export let data
   let submitStatus = ""
+  let referralId = 0
   let submitError = ""
+  let submitErrorTitle = "Fatal Error:"
 
   // Data
   const Departments : string[]= [
@@ -52,13 +54,14 @@
     attachment = p
   }
   let attachmentButton = "Select Data"
-  let selectedDept = {value: "", label:""} 
+  let selectedDept = {value: "", label:""}
 
   function onSubmit(e : SubmitEvent){
     const errList : string[] = []
     e.preventDefault()
     if(!e.target){
-      submitError = "Fatal Error: Unable to find data"
+      submitErrorTitle = "Fatal Error"
+      submitError = "Unable to find data"
       return
     }
     const target : any = e.target
@@ -87,8 +90,9 @@
       errList.push("Diagnosis")
     }
     if(errList.length > 0){
-      submitError = errList.join(", ")
-      // return
+      submitErrorTitle = "Validation Error"
+      submitError = "Required Fields: "+errList.join(", ")
+      return
     }
     submitError = ""
     const submitData : referralMeta & {Diagnosis: string, History: string}= {
@@ -96,8 +100,8 @@
 
       CitizenId: patient.CitizenId,
       Prefix: patient.Prefix,
-      FirstName: patient.Firstname,
-      LastName: patient.Lastname,
+      FirstName: patient.FirstName,
+      LastName: patient.LastName,
       BirthDate: patient.BirthDate,
       Address: patient.Address,
       Gender: patient.Gender,
@@ -115,11 +119,38 @@
     }
     // submit doctorId as ? querystring
     submitStatus = "submitting"
+    fetch(PUBLIC_CLIENT_FRONTEND_URL+"/",{
+      method: "POST",
+      body: JSON.stringify(submitData)
+    })
+      .then(async (d: Response)=>{
+        if(d.status != 201){
+          throw await d.json()
+        }
+        return d.json()
+      })
+      .then((d:{id: number})=>{
+        submitStatus = "complete"
+        referralId = d.id
+      })
+      .catch(async (e: Error)=>{
+        submitStatus = "error"
+        submitErrorTitle = "Submission Error"
+        submitError = e.message
+      })
   }
 </script>
 {#if submitStatus == "submitting"}
   <div class="mx-auto w-[20rem] text-xl text-center">Submitting...</div>
   <Spinner class="mx-auto mt-4 w-[3rem]"/>
+{:else if submitStatus == "complete"}
+<div class="mx-auto w-[20rem] text-xl text-center">Submission Complete</div>
+<div class="mx-auto w-[20rem] text-2xl mt-8 text-center">Referral ID: {referralId}</div>
+<!-- <a>&larr; a</a> -->
+<div class="mx-auto text-center">
+  <Button href={"/doctor/referral/"+referralId}>View Referral</Button>
+  <Button variant="outline" class="inline-block mt-8" href="/doctor">Return to List</Button>
+</div>
 {:else}
 <form class="mx-auto max-w-[40rem]" on:submit={onSubmit}>
   <Label class="font-semibold text-[11pt] block mb-1"
@@ -176,7 +207,7 @@
   <DataSelect bind:submit={selectAttachment} bind:dataView={attachmentButton}/>
   {#if submitError != ""}
     <Alert.Root class="my-4" variant="destructive">
-      <Alert.Title>Error: Incomplete Fields</Alert.Title>
+      <Alert.Title>Submission Error</Alert.Title>
       <Alert.Description>
         {submitError}
       </Alert.Description>

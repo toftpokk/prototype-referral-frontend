@@ -7,7 +7,7 @@
     {#await data.referral}
         <p>Loading Referral...</p>
     {:then referral} 
-        <ReferralView referral={referral}/>
+        <ReferralView referral={referral} referralId={data.referralId}/>
     {:catch}
         <p>Error: Could not fetch referral</p>
     {/await}

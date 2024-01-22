@@ -67,8 +67,8 @@ export type PatientData = {
     Hn: string;
     CitizenId: string;
     Prefix: string;
-    Firstname: string;
-    Lastname: string;
+    FirstName: string;
+    LastName: string;
     Address: string;
     BirthDate: string;
     Gender: string;

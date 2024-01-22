@@ -42,6 +42,10 @@ export let referralLink : string = "/"
                     </TableMenu>
                 </Table.Cell>
             </Table.Row>
+        {:else}
+        <Table.Row class="mx-auto text-center">
+            <Table.Cell colspan={7} class="text-muted-foreground">No Referrals Found</Table.Cell>
+        </Table.Row>
         {/each}
     </Table.Body>
 </Table.Root>

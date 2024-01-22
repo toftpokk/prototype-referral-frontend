@@ -3,6 +3,7 @@
 import { Badge } from "./components/ui/badge";
     import { translateName, type Referral, translateHospital } from "./global";
     export let referral : Referral 
+    export let referralId : string 
 </script>
 <style>
     .key {
@@ -16,6 +17,8 @@ import { Badge } from "./components/ui/badge";
 <div class="grid grid-cols-4">
     <div class="col-span-1"></div>
     <div class="col-span-3 font-bold text-xl">Referral</div>
+    <div class="key">ID</div>
+    <div class="val">{referralId}</div>
     <div class="key">Status</div>
     <div class="val"><ReferralStatusBadge status={referral.ReferralStatus} class="text-sm"/></div>
     <div class="key">Destination</div>
@@ -27,7 +30,7 @@ import { Badge } from "./components/ui/badge";
     <div class="key">Reason</div>
     <div class="val">{referral.Reason}</div>
     <div class="key">Creation Date</div>
-    <div class="val">{new Date(referral.Created).toLocaleString('en-UK')}</div>
+    <div class="val">{new Date(referral.Created*1000).toLocaleString('en-UK')}</div>
     <div class="col-span-1"></div>
     <div class="col-span-3 font-bold text-xl mt-4">Patient</div>
     <div class="key">Name</div>
