@@ -1,7 +1,6 @@
 import { PUBLIC_CLIENT_FRONTEND_URL } from "$env/static/public";
 import type { Referral } from "$lib/global"
 import { error } from "@sveltejs/kit";
-import type { PageServerLoad } from "./$types";
 
 export function load(){
     const response = fetch(PUBLIC_CLIENT_FRONTEND_URL+"/")

@@ -1,8 +1,8 @@
 import { PUBLIC_CLIENT_FRONTEND_URL } from "$env/static/public"
 import { ReferralStatus, type Referral } from "$lib/global"
-import type { PageServerLoad } from "./$types"
+import type { PageLoad } from "./$types"
 
-export const load: PageServerLoad = async ({ params }) => {
+export const load: PageLoad = async ({ params }) => {
     const referralId = params.referralId
     const response : Referral = await fetch(PUBLIC_CLIENT_FRONTEND_URL + "/referral/" + referralId)
         .then(async (d: Response) => {
