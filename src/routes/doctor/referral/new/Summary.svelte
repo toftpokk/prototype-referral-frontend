@@ -20,7 +20,6 @@
   };
   export let data: Data[];
   let dataFix : (Data & {Start: string})[];
-  let df : Data[];
   export let checks : Record<string,boolean> = {};
   function resetCheck(){
     checks = {}
