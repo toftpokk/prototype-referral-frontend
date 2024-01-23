@@ -50,7 +50,7 @@
   }
   let hospitalButton = "Find Destination"
   // Data
-  let attachment : any
+  let attachment : Record<string,boolean> | null
   let selectAttachment = (p:any)=>{
     attachmentButton = true
     attachment = p
@@ -94,42 +94,43 @@
     if(errList.length > 0){
       submitErrorTitle = "Validation Error"
       submitError = "Required Fields: "+errList.join(", ")
-      // return false
+      return false
     }
     submitError = ""
-    // console.log("a",file)
-    for(const file of files){
-      console.log(file)
+    formData.set("Origin",PUBLIC_HOSPITAL_ID) // Sent, but not used
+    formData.set("Destination", hospital.HospitalId)
+    formData.set("Department", department)
+    // Reason set
+    // History set
+    // Diagnosis set
+    formData.set("CitizenId", patient.CitizenId)
+    formData.set("Prefix", patient.Prefix)
+    formData.set("FirstName", patient.FirstName)
+    formData.set("LastName", patient.LastName)
+    formData.set("BirthDate", patient.BirthDate)
+    formData.set("Address", patient.Address)
+    formData.set("Gender", patient.Gender)
+    formData.set("Telephone", patient.Telephone)
+    formData.set("Email", patient.Email)
+    // Files
+    if(files){
+      for(const file of files){
+        formData.append("files",file)
+      }
     }
-    return false
-    const submitData : referralMeta & {Diagnosis: string, History: string}= {
-      Origin: PUBLIC_HOSPITAL_ID, // Sent, but not used
-
-      CitizenId: patient.CitizenId,
-      Prefix: patient.Prefix,
-      FirstName: patient.FirstName,
-      LastName: patient.LastName,
-      BirthDate: patient.BirthDate,
-      Address: patient.Address,
-      Gender: patient.Gender,
-      Telephone: patient.Telephone,
-      Email: patient.Email,
-
-      Destination: hospital.HospitalId,
-
-      Department: department,
-
-      Reason: reason,
-      History: history,
-      Diagnosis: diagnosis,
-      // TODO upload additional files
+    if(attachment){
+      for(const key of Object.keys(attachment)){
+        if(attachment[key]){
+          formData.append("attachments",key)
+        }
+      }
     }
     // submit doctorId as ? querystring
     submitStatus = "submitting"
-    fetch(PUBLIC_CLIENT_FRONTEND_URL+"/",{
-      method: "POST",
-      body: JSON.stringify(submitData)
-    })
+      fetch(PUBLIC_CLIENT_FRONTEND_URL+"/",{
+        method: "POST",
+        body: formData
+      })
       .then(async (d: Response)=>{
         if(d.status != 201){
           throw await d.json()
@@ -139,12 +140,12 @@
       .then((d:{id: number})=>{
         submitStatus = "complete"
         referralId = d.id
-      })
-      .catch(async (e: Error)=>{
+      }).catch((e : any)=>{
         submitStatus = "error"
         submitErrorTitle = "Submission Error"
         submitError = e.message
       })
+    return true
   }
 </script>
 {#if submitStatus == "submitting"}
@@ -215,6 +216,12 @@
   {:else}
      <Input value="Select a patient before adding documents" disabled/>
   {/if}
+  <Label class="font-semibold text-[11pt] block mb-1 mt-5"
+    >Upload Files</Label
+  >
+  <input multiple id="picture" type="file" bind:files={files}
+    class="flex h-10 w-full rounded-md border shadow-sm border-input bg-transparent px-3 py-2 text-sm ring-offset-background file:border-0  file:bg-transparent file:text-foreground file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+  />
   {#if submitError != ""}
     <Alert.Root class="my-4" variant="destructive">
       <Alert.Title>Submission Error</Alert.Title>
@@ -223,12 +230,6 @@
       </Alert.Description>
     </Alert.Root>
   {/if}
-  <Label class="font-semibold text-[11pt] block mb-1 mt-5"
-    >Upload Files</Label
-  >
-  <input multiple id="picture" type="file" bind:files={files}
-    class="flex h-10 w-full rounded-md border shadow-sm border-input bg-transparent px-3 py-2 text-sm ring-offset-background file:border-0  file:bg-transparent file:text-foreground file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-  />
   <Button type="submit" class="block w-full mt-5">Submit Referral</Button>
 </form>
 {/if}

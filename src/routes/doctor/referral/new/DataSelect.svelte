@@ -24,10 +24,12 @@
     data = getData(patientId);
   }
   type Data = {
-    Id: string;
-    Name: string;
-    Reason: string;
-    Start: string;
+    Encounter: {
+      Id: string;
+      Name: string;
+      Reason: string;
+      Start: string;
+    },
     Observations: {
       Id: string;
       Encounter: string;
@@ -56,12 +58,14 @@
     <p>Loading data...</p>
   {:then dataVal}
     {#each Object.keys(checks) as check}
-      {@const checkObject = dataVal.filter((a) => a.Id == check)[0]}
-      <p class="my-4">
-        <span class="text-muted-foreground mx-4">
-          {checkObject.Start.substring(0, 10)}
-        </span>{checkObject.Name}
-      </p>
+      {#if checks[check]}
+        {@const checkObject = dataVal.filter((a) => a.Encounter.Id == check)[0]}
+        <p class="my-4">
+          <span class="text-muted-foreground mx-4">
+            {checkObject.Encounter.Start.substring(0, 10)}
+          </span>{checkObject.Encounter.Name}
+        </p>
+      {/if}
     {:else}
       <span class="w-full pl-3"></span>
     {/each}

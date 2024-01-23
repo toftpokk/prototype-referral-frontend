@@ -4,10 +4,12 @@
     import { BarChart3 } from "lucide-svelte";
     import Button from "$lib/components/ui/button/button.svelte";
   type Data = {
-    Id: string;
-    Name: string;
-    Reason: string;
-    Start: string;
+    Encounter: {
+      Id: string;
+      Name: string;
+      Reason: string;
+      Start: string;
+    },
     Observations: {
       Id: string;
       Encounter: string;
@@ -17,7 +19,8 @@
     }[];
   };
   export let data: Data[];
-  let dataFix : Data[];
+  let dataFix : (Data & {Start: string})[];
+  let df : Data[];
   export let checks : Record<string,boolean> = {};
   function resetCheck(){
     checks = {}
@@ -25,9 +28,15 @@
   $: {
     dataFix = data
     .map((enc) => {
+      let start_date = new Date(0)
+      try{
+        start_date = new Date(enc.Encounter.Start)
+      } catch(e){
+        console.log(e)
+      }
       return {
         ...enc,
-        Start: new Date(enc.Start)
+        Start: start_date,
       };
     })
     .sort((a, b) => {
@@ -37,8 +46,10 @@
       return {
         ...enc,
         Start: enc.Start.toISOString().substring(0, 10),
+        // Start: "Invalid"
       };
     });
+    console.log(dataFix)
     resetCheck()
   }
 </script>
@@ -52,20 +63,20 @@
     <form class="h-[20rem] overflow-scroll">
       <Accordion.Root>
         {#each dataFix as encounter}
-          <Accordion.Item value={encounter.Id} class="flex">
-            <input type="checkbox" class="my-5 w-7 inline-block mb-auto accent-primary" value={encounter.Id} bind:checked={checks[encounter.Id]}/>
+          <Accordion.Item value={encounter.Encounter.Id} class="flex">
+            <input type="checkbox" class="my-5 w-7 inline-block mb-auto accent-primary" value={encounter.Encounter.Id} bind:checked={checks[encounter.Encounter.Id]}/>
             <div class="flex-grow flex-col">
             <Accordion.Trigger class="flex-row flex">
               <span class="w-full text-left flex" >
                 <span class="text-muted-foreground px-4 w-[7rem]">{encounter.Start}</span>
                 <span class="flex-grow">
-                  {encounter.Name}{encounter.Reason
-                    ? ": " + encounter.Reason
+                  {encounter.Encounter.Name}{encounter.Encounter.Reason
+                    ? ": " + encounter.Encounter.Reason
                     : ""}</span>
-                </span>
-                {#if encounter.Observations.length > 0}
-                  <span class="mx-4"><BarChart3/></span>
-                {/if}
+              </span>
+              {#if encounter.Observations.length > 0}
+                <span class="mx-4"><BarChart3/></span>
+              {/if}
               </Accordion.Trigger
             >
             <Accordion.Content>
