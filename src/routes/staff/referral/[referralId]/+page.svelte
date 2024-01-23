@@ -25,22 +25,23 @@
     }
 </script>
 <div class="mx-auto max-w-[40rem]">
-    {#await data.referral}
-        <p>Loading Referral...</p>
-    {:then referral} 
-        <ReferralView referral={referral} referralId={data.referralId}/>
-        <div class="ml-40">
-            {#if grantError}
-                <p>Grant Error: {grantError}</p>
-            {/if}
-            {#if referral.ReferralStatus == ReferralStatus.Consented}
-                <Button on:click={grant(true)}>Grant Permission to Refer</Button>
-                <Button on:click={grant(false)} variant="destructive">Deny Permission to Refer</Button>
-            {:else}
-                <p>Not in a state to give or deny permissions</p>
-            {/if}
-        </div>
-    {:catch}
-        <p>Error: Could not fetch referral</p>
-    {/await}
+    <ReferralView referral={data.referral} referralId={data.referralId}/>
+    <div class="ml-40">
+        {#if grantError}
+            <p>Grant Error: {grantError}</p>
+        {/if}
+        {#if data.referral.ReferralStatus == ReferralStatus.Consented}
+            <Button on:click={grant(true)}>Grant Permission to Refer</Button>
+            <Button on:click={grant(false)} variant="destructive">Deny Permission to Refer</Button>
+        {:else if data.referral.ReferralStatus == ReferralStatus.Complete}
+            <div class="col-span-3 font-bold text-xl">Download Files</div>
+            <div>
+            {#each data.referralFiles as file}
+                <Button class="mx-1 mb-1" download href={PUBLIC_CLIENT_FRONTEND_URL+"/referral/"+data.referralId+"/download/"+file}>{file}</Button>
+            {/each}
+            </div>
+        {:else}
+            <p>Not in a state to give or deny permissions</p>
+        {/if}
+    </div>
 </div>
