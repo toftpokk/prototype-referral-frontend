@@ -10,6 +10,12 @@ export enum ReferralStatus {
     NotGranted = "NotGranted",
 }
 
+export type Hospital = {
+    Id: number;
+    HospitalName: string
+    HospitalId: string
+}
+
 export enum GrantStatus {
     Accepted = "Accepted",
     Declined = "Declined"

@@ -36,6 +36,7 @@
                       <Select.Item value="doctor">Doctor</Select.Item>
                       <Select.Item value="patient">Patient</Select.Item>
                       <Select.Item value="staff">Staff</Select.Item>
+                      <Select.Item value="admin">Admin</Select.Item>
                     </Select.Content>
                   </Select.Root>
                 <Input class="" name="username" type="text" placeholder="Doctor ID" required/>
@@ -47,6 +48,7 @@
                 <!-- Essential for maintaining size: TODO understand -->
                 <p class="hidden">For new users or users with no account, please <a>register</a></p>
             </form>
+            <!-- <Button>a</Button> -->
         </div>
     </div>
 </div>

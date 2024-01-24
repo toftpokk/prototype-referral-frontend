@@ -37,6 +37,18 @@ export const actions : import('./$types').Actions = {
         // Accepted
         throw redirect(303,"/staff")
     },
+    admin: async ({request, cookies}) : Promise<{error: string|undefined}> => {
+        // console.log(await request.formData())
+        // return fail(400, {
+        //     error: "Test Error"
+        // })
+        cookies.set("username","test",{path: '/'})
+        // login as doctor
+        cookies.set("role","admin",{path: '/'})
+        
+        // Accepted
+        throw redirect(303,"/admin")
+    },
     "": async()=>{
         return fail(400, {
             error: "Test Error"
