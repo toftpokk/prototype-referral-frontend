@@ -23,7 +23,7 @@ export let referralLink : string = "/"
         {#each referrals as referral}
             <Table.Row>
                 <Table.Cell class="text-right text-md">{referral.Id}</Table.Cell>
-                <Table.Cell>{translateName(referral)}</Table.Cell>
+                <Table.Cell class="font-bold text-base"><a class="hover:underline" href={referralLink+"/"+referral.Id}>{translateName(referral)}</a></Table.Cell>
                 {#await translateHospital(referral.Destination)}
                     <Table.Cell>...</Table.Cell>
                 {:then value}
@@ -32,8 +32,8 @@ export let referralLink : string = "/"
                 <Table.Cell>{(new Date(referral.Created)).toLocaleString('en-UK')}</Table.Cell>
                 <Table.Cell>{referral.Reason}</Table.Cell>
                 
-                <Table.Cell>
-                    <ReferralStatusBadge status={referral.ReferralStatus}/>
+                <Table.Cell class="">
+                    <ReferralStatusBadge class="w-max" status={referral.ReferralStatus}/>
                 </Table.Cell>
                 <Table.Cell>
                     <TableMenu class="w-8 h-8 p-0" url={referralLink+"/"+referral.Id}>

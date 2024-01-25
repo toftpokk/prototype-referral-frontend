@@ -41,16 +41,16 @@ import { Badge } from "./components/ui/badge";
     <div class="col-span-3 font-bold text-xl mt-4">Patient</div>
     <div class="key">Name</div>
     <div class="val">{translateName(referral)}</div>
-    <div class="key">Citizen ID</div>
-    <div class="val">{referral.CitizenId}</div>
+    <!-- <div class="key">Citizen ID</div>
+    <div class="val">{referral.CitizenId}</div> -->
     <div class="key">Gender</div>
     <div class="val">{referral.Gender}</div>
-    <div class="key">Birth Date</div>
-    <div class="val">{referral.BirthDate}</div>
-    <div class="key">Address</div>
+    <!-- <div class="key">Birth Date</div>
+    <div class="val">{referral.BirthDate}</div> -->
+    <!-- <div class="key">Address</div>
     <div class="val">{referral.Address}</div>
     <div class="key">Email</div>
     <div class="val">{referral.Email}</div>
     <div class="key">Telephone</div>
-    <div class="val">{referral.Telephone}</div>
+    <div class="val">{referral.Telephone}</div> -->
 </div>

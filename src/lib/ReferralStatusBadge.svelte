@@ -28,10 +28,10 @@
         @apply bg-gray-300;
     }
     .UploadComplete {
-        @apply bg-green-300;
+        @apply bg-green-200;
     }
     .Complete{
-        @apply bg-green-300;
+        @apply bg-green-100 text-green-700 border border-green-200;
     }
 </style>
 <span class={cn(badgeClass,status, className)}>

@@ -30,8 +30,10 @@
         {/if}
         {#if referral.ReferralStatus == ReferralStatus.Created}
             <Button class="btn-alt" on:click={giveConsent}>Give Consent to Referral</Button>
-        {:else}
+        {:else if referral.ReferralStatus == ReferralStatus.Consented}
             <p>Consent given, transferring data...</p>
+        {:else if referral.ReferralStatus == ReferralStatus.Complete}
+            <p></p>
         {/if}
     {:catch}
         <p>Error: Could not fetch referral</p>

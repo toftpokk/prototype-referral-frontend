@@ -6,9 +6,9 @@ export const actions : import('./$types').Actions = {
         // return fail(400, {
         //     error: "Test Error"
         // })
-        cookies.set("username","test",{path: '/'})
+        cookies.set("username","test",{path: '/',secure: false})
         // login as doctor
-        cookies.set("role","doctor",{path: '/'})
+        cookies.set("role","doctor",{path: '/',secure: false})
         
         // Accepted
         throw redirect(303,"/doctor")
@@ -18,9 +18,9 @@ export const actions : import('./$types').Actions = {
         // return fail(400, {
         //     error: "Test Error"
         // })
-        cookies.set("username","test",{path: '/'})
+        cookies.set("username","test",{path: '/',secure: false})
         // login as doctor
-        cookies.set("role","patient",{path: '/'})
+        cookies.set("role","patient",{path: '/',secure: false})
         
         // Accepted
         throw redirect(303,"/patient")
@@ -30,21 +30,22 @@ export const actions : import('./$types').Actions = {
         // return fail(400, {
         //     error: "Test Error"
         // })
-        cookies.set("username","test",{path: '/'})
+        cookies.set("username","test",{path: '/',secure: false})
         // login as doctor
-        cookies.set("role","staff",{path: '/'})
+        cookies.set("role","staff",{path: '/',secure: false})
+        console.log(cookies.get("role"))
         
         // Accepted
-        throw redirect(303,"/staff")
+        redirect(303,"/staff")
     },
     admin: async ({request, cookies}) : Promise<{error: string|undefined}> => {
         // console.log(await request.formData())
         // return fail(400, {
         //     error: "Test Error"
         // })
-        cookies.set("username","test",{path: '/'})
+        cookies.set("username","test",{path: '/',secure: false})
         // login as doctor
-        cookies.set("role","admin",{path: '/'})
+        cookies.set("role","admin",{path: '/',secure: false})
         
         // Accepted
         throw redirect(303,"/admin")
