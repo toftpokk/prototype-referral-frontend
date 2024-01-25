@@ -165,3 +165,24 @@ export async function translateHospital(hcode: string) : Promise<string>{
     }
     return "Unknown Hospital"
 }
+
+export function translateFileState(status : ReferralStatus){
+    switch(status){
+        case ReferralStatus.Created:
+            return "Waiting"
+        case ReferralStatus.Consented:
+            return "Waiting"
+        case ReferralStatus.Complete:
+            return "Complete"
+        case ReferralStatus.UploadIncomplete:
+            return "Uploading"
+        case ReferralStatus.Granted:
+            return "Waiting"
+        case ReferralStatus.UploadComplete:
+            return "Complete"
+        case ReferralStatus.NotGranted:
+            return "Stopped"
+        default:
+            return status
+    }
+}

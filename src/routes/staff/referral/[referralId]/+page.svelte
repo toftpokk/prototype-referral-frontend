@@ -3,7 +3,7 @@
     import { PUBLIC_CLIENT_FRONTEND_URL, PUBLIC_HOSPITAL_ID } from '$env/static/public';
     import ReferralView from '$lib/ReferralView.svelte';
     import { Button } from '$lib/components/ui/button';
-    import { ReferralStatus } from '$lib/global';
+    import { ReferralStatus, translateFileState } from '$lib/global';
     export let data : import('./$types').PageData;
     let grantError = ""
     const grant = (verdict: boolean)=>()=>{
@@ -22,26 +22,6 @@
             grantError = ""
             invalidateAll()
         })
-    }
-    function translateState(status : ReferralStatus){
-        switch(status){
-            case ReferralStatus.Created:
-                return "Waiting"
-            case ReferralStatus.Consented:
-                return "Waiting"
-            case ReferralStatus.Complete:
-                return "Complete"
-            case ReferralStatus.UploadIncomplete:
-                return "Uploading"
-            case ReferralStatus.Granted:
-                return "Waiting"
-            case ReferralStatus.UploadComplete:
-                return "Complete"
-            case ReferralStatus.NotGranted:
-                return "Waiting"
-            default:
-                return status
-        }
     }
 </script>
 <div class="mx-auto max-w-[40rem]">
@@ -77,7 +57,7 @@
                              <!-- href={PUBLIC_CLIENT_FRONTEND_URL+"/referral/"+data.referralId+"/download/"+file} -->
                             <a class="underline" href={PUBLIC_CLIENT_FRONTEND_URL+"/referral/"+data.referralId+"/download/"+file} download>Download</a>
                         {:else}
-                            <span>{translateState(data.referral.ReferralStatus)}</span>
+                            <span>{translateFileState(data.referral.ReferralStatus)}</span>
                         {/if}
                     </li>
                     {/each}
