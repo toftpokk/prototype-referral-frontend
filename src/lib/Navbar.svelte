@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { PUBLIC_HOSPITAL_NAME, PUBLIC_ROLE } from "$env/static/public";
     import UserMenu from "./UserMenu.svelte";
     import { ChevronDown, Home, Shield, Stethoscope, User } from "lucide-svelte";
 
@@ -11,8 +12,15 @@
         <a class="mt-1" href="/">
             <Home size="30" class="h-8"/>
         </a>
-        
-        <h2 class="text-2xl font-bold pt-1">{title}</h2>
+        <div class="pb-1">
+        {#if PUBLIC_ROLE == "Client"}
+                <h2 class="text-xl font-bold">{title}</h2>
+                <h2 class="leading-3 text-muted-foreground">{PUBLIC_HOSPITAL_NAME}</h2>
+        {:else}
+            <h2 class="text-xl font-bold">{title}</h2>
+            <h2 class="leading-3 text-muted-foreground">Referral Server</h2>
+        {/if}
+        </div>
     </div>
     <div class="my-auto">
         <UserMenu url="/logout">
