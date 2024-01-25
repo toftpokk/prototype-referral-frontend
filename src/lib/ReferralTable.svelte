@@ -5,13 +5,16 @@ import * as Table from "$lib/components/ui/table";
     import TableMenu from "./TableMenu.svelte";
 export let referrals : Referral[] = []
 export let referralLink : string = "/"
-
+export let isDoc : boolean = false
 </script>
 <Table.Root class="">
     <Table.Header>
         <Table.Row>
             <Table.Head class="w-[50px] text-right">ID</Table.Head>
-            <Table.Head>Patient</Table.Head>
+            {#if isDoc}
+                <Table.Head>Patient</Table.Head>
+            {/if}
+            <Table.Head>Origin</Table.Head>
             <Table.Head>Destination</Table.Head>
             <Table.Head>Created</Table.Head>
             <Table.Head>Reason</Table.Head>
@@ -23,7 +26,14 @@ export let referralLink : string = "/"
         {#each referrals as referral}
             <Table.Row>
                 <Table.Cell class="text-right text-md">{referral.Id}</Table.Cell>
-                <Table.Cell class="font-bold text-base"><a class="hover:underline" href={referralLink+"/"+referral.Id}>{translateName(referral)}</a></Table.Cell>
+                {#if isDoc}
+                    <Table.Cell class="font-bold text-base"><a class="hover:underline" href={referralLink+"/"+referral.Id}>{translateName(referral)}</a></Table.Cell>
+                {/if}
+                {#await translateHospital(referral.Origin)}
+                    <Table.Cell>...</Table.Cell>
+                {:then value}
+                    <Table.Cell>{value}</Table.Cell>
+                {/await}
                 {#await translateHospital(referral.Destination)}
                     <Table.Cell>...</Table.Cell>
                 {:then value}

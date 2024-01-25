@@ -75,7 +75,7 @@
         <Spinner class="mx-auto mt-4 w-[3rem]"/>
     </div>
     {:then referrals}
-        <ReferralTable referrals={referrals} referralLink="/doctor/referral"/>
+        <ReferralTable isDoc={true} referrals={referrals} referralLink="/doctor/referral"/>
     {:catch}
         <div class="mx-auto w-[20rem] text-xl text-center">Error: Could not load referral data</div>
     {/await}
