@@ -54,7 +54,9 @@
                 <Input type="submit" value="Continue &rarr;" class={buttonVariants()}/>
 
                 <!-- Essential for maintaining size: TODO understand -->
-                <p class="hidden">For new users or users with no account, please <a>register</a></p>
+                {#if PUBLIC_ROLE != "Client"}
+                    <p class="px-4">For new users or users with no account, please register <a class="underline text-blue-500" href="/register">here</a></p>
+                {/if}
             </form>
             <!-- <Button>a</Button> -->
         </div>
