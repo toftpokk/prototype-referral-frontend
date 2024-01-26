@@ -56,7 +56,7 @@
     attachment = p
   }
   let attachmentButton = false
-  let selectedDept = {value: "", label:""}
+  let selectedDept = ""
   let files : FileList
   function onSubmit(e : SubmitEvent){
     const errList : string[] = []
@@ -75,7 +75,7 @@
     if(!hospital || !hospital.HospitalId){
       errList.push("Destination")
     }
-    const department : any = selectedDept.value
+    const department : any = selectedDept
     if(department== ""){
       errList.push("Department")
     }
@@ -181,20 +181,14 @@
     <p>Error loading hospital list</p>
   {/await}
   <Label class="font-semibold text-[11pt] block mb-1 mt-5" for="Department"
-    >Department<span class="text-red-500">*</span></Label
+    >Department<span class="text-red-500">*</span>
+    <span class="ml-2 text-muted-foreground font-normal">This field can be seen by non-medical personnel</span></Label
   >
-  <Select.Root bind:selected={selectedDept}>
-    <Select.Trigger id="Department">
-      <Select.Value placeholder="Select a Department to Refer" />
-    </Select.Trigger>
-    <Select.Content>
-      {#each Departments as dept}
-        <Select.Item value={dept}>{dept}</Select.Item>
-      {/each}
-    </Select.Content>
-  </Select.Root>
+  <Input class="" name="Department" bind:value={selectedDept}
+  />
   <Label for="Reason" class="font-semibold text-[11pt] block mb-1 mt-5"
-    >Reason for Referral<span class="text-red-500">*</span></Label
+    >Reason for Referral<span class="text-red-500">*</span>
+    <span class="ml-2 text-muted-foreground font-normal">This field will be seen by non-medical personnel</span></Label
   >
   <Textarea id="Reason" name="Reason">
   </Textarea>
