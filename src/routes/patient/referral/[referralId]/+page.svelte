@@ -11,7 +11,6 @@
     import { ReferralStatus, translateHospital, translateName } from '$lib/global';
 
     export let data : import('./$types').PageData;
-    let consentError = ""
     let submitError = ""
     function giveConsent(){
         if(checked == false){
@@ -22,10 +21,10 @@
             method: "POST"
         }).then(async (d: Response)=>{
             if(d.status != 200){
-                consentError = (await d.json()).message
+                submitError = (await d.json()).message
                 return
             }
-            consentError = ""
+            submitError = ""
             invalidateAll()
         })
     }
@@ -40,14 +39,6 @@
               <Card.Title>Consent</Card.Title>
             </Card.Header>
             <Card.Content>
-                {#if consentError}
-                <Alert.Root class="my-4" variant="destructive">
-                    <Alert.Title>Consent Error</Alert.Title>
-                    <Alert.Description>
-                        {consentError}
-                    </Alert.Description>
-                </Alert.Root>
-                {/if}
         {#if referral.ReferralStatus == ReferralStatus.Created}
             {#await translateHospital(referral.Destination)}
                 <p class="my-2">a</p>
