@@ -1,5 +1,6 @@
 import adapter from "@sveltejs/adapter-auto";
 import tailwindcss from 'tailwindcss';
+import autoprefixer from 'autoprefixer';
 import { vitePreprocess } from "@sveltejs/vite-plugin-svelte";
 
 /** @type {import('@sveltejs/kit').Config} */
@@ -9,7 +10,7 @@ const config = {
   preprocess: [
     vitePreprocess({
       postcss: {
-        plugins: [tailwindcss]
+        plugins: [tailwindcss,autoprefixer]
       }
     })
   ],
