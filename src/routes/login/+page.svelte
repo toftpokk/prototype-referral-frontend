@@ -47,7 +47,7 @@
                       {/if}
                     </Select.Content>
                   </Select.Root>
-                <Input class="" name="username" type="text" placeholder="Doctor ID" required/>
+                <Input class="" name="username" type="text" placeholder="Username" required/>
                 <Input class="" name="password" type="password" placeholder="Password" required/>
                 <!-- <a class="text-right">Forgot Password?</a> -->
 

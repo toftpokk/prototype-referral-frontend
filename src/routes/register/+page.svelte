@@ -11,6 +11,25 @@
     let submitError = ""
     let submitErrorTitle = ""
     let ndidId = ""
+    function checkPassword(str) {
+    // Check if string has at least 8 characters
+    if (str.length < 8) {
+        return false;
+    }
+    
+    // Check if string has at least 1 upper case letter
+    if (!/[A-Z]/.test(str)) {
+        return false;
+    }
+    
+    // Check if string has at least 1 lower case letter
+    if (!/[a-z]/.test(str)) {
+        return false;
+    }
+    
+    // If all conditions pass, return true
+    return true;
+}
     async function onSubmit(e : SubmitEvent){
       const errList : string[] = []
       e.preventDefault()
@@ -52,26 +71,29 @@
         submitError = "Password and Re-type Password do not match"
         return false
       }
+      if(!checkPassword(password)){
+        submitErrorTitle = "Validation Error"
+        submitError = "Password does not meet requirements"
+        return false
+      }
       const formObject = JSON.stringify(Object.fromEntries(formData))
       submitStatus = "submitting"
-        await fetch(PUBLIC_SERVER_FRONTEND_URL+"/register",{
+        const response = await fetch(PUBLIC_SERVER_FRONTEND_URL+"/register",{
           method: "POST",
           body: formObject
         })
-        .then(async (d: Response)=>{
-          if(d.status != 201){
-            throw await d.json()
-          }
-          return d.json()
-        })
-        .then((d:{id: string})=>{
-          submitStatus = "complete"
-          ndidId = d.id
-        }).catch((e : any)=>{
+        if(response.status != 201){
+          const e = await response.json()
           submitStatus = "error"
           submitErrorTitle = "Submission Error"
           submitError = e.message
-        })
+          return false
+        }
+        const responseBody =  response.json()
+        submitStatus = "complete"
+        submitError = ""
+        submitErrorTitle = ""
+        ndidId = responseBody.id
       return true
     }
   </script>

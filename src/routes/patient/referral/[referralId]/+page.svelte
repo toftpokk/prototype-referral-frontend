@@ -22,7 +22,7 @@
             method: "POST"
         }).then(async (d: Response)=>{
             if(d.status != 200){
-                consentError = await d.json()
+                consentError = (await d.json()).message
                 return
             }
             consentError = ""
@@ -41,7 +41,12 @@
             </Card.Header>
             <Card.Content>
                 {#if consentError}
-                <p>Consent Error: {consentError}</p>
+                <Alert.Root class="my-4" variant="destructive">
+                    <Alert.Title>Consent Error</Alert.Title>
+                    <Alert.Description>
+                        {consentError}
+                    </Alert.Description>
+                </Alert.Root>
                 {/if}
         {#if referral.ReferralStatus == ReferralStatus.Created}
             {#await translateHospital(referral.Destination)}

@@ -1,10 +1,8 @@
 import { PUBLIC_CLIENT_FRONTEND_URL, PUBLIC_SERVER_FRONTEND_URL } from "$env/static/public";
 import type { Referral } from "$lib/global"
-import { error } from "@sveltejs/kit";
-import type { PageServerLoad } from "./$types";
 
-export function load(){
-    const response = fetch(PUBLIC_SERVER_FRONTEND_URL+"/")
+export function load({cookies}){
+    const response = fetch(PUBLIC_SERVER_FRONTEND_URL+"/?username="+cookies.get("username"))
         .then(async (d: Response)=>{
             if(d.status != 200){
                 throw await d.json()
