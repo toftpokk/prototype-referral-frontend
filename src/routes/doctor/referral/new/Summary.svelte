@@ -81,6 +81,8 @@
             <Accordion.Content>
               {#each encounter.Observations as obs}
                 <p class="ml-6 mt-2">{obs.Name}: {obs.Value} {obs.Unit}</p>
+              {:else}
+              <p>No data found</p>
               {/each}
             </Accordion.Content>
           </div>

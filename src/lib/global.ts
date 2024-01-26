@@ -103,7 +103,7 @@ export function translateReferralStatus(status: ReferralStatus){
         case ReferralStatus.Created:
             return "Awaiting Patient Consent"
         case ReferralStatus.Consented:
-            return "Awaiting Destination Hospital"
+            return "Awaiting Permission to Refer"
         case ReferralStatus.Complete:
             return "Referral Complete"
         case ReferralStatus.UploadIncomplete:

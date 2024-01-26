@@ -19,7 +19,7 @@
     }
     /* Action Not Needed */
     .Consented{
-        @apply bg-gray-300;
+        @apply bg-gray-300 text-black;
     }
     .UploadIncomplete{
         @apply bg-gray-300;

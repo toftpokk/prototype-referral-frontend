@@ -75,6 +75,8 @@
                             <span>{translateFileState(data.referral.ReferralStatus)}</span>
                         {/if}
                     </li>
+                    {:else}
+                    <p>Patient data is not available until referral is completed</p>
                     {/each}
                 </ul>
     {/if}

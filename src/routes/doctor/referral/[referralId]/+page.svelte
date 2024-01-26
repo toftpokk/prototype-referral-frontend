@@ -9,7 +9,7 @@
     {#await data.referral}
         <p>Loading Referral...</p>
     {:then referral} 
-        <ReferralView referral={referral} referralId={data.referralId}/>
+        <ReferralView referral={referral} referralId={data.referralId} isDoc={true}/>
         <Card.Root class="my-2">
             <Card.Header class="">
               <Card.Title>Files</Card.Title>

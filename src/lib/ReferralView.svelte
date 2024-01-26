@@ -6,6 +6,7 @@ import { Badge } from "./components/ui/badge";
     import { translateName, type Referral, translateHospital } from "./global";
     export let referral : Referral 
     export let referralId : string 
+    export let isDoc : boolean = false
 </script>
 <style>
     .key {
@@ -53,6 +54,10 @@ import { Badge } from "./components/ui/badge";
       <Card.Title>Patient</Card.Title>
     </Card.Header>
     <Card.Content>
+        {#if isDoc}
+        <div class="key">Name</div>
+        <div class="val">{translateName(referral)}</div>     
+        {/if}
         <div class="key">Gender</div>
         <div class="val">{referral.Gender}</div>
         <div class="key">Age</div>
