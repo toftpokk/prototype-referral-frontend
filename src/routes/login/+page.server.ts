@@ -33,7 +33,6 @@ export const actions : import('./$types').Actions = {
             })
         }
         if(response.status != 200) {
-            console.log(response)
             return fail(400, {
                 error: "Wrong Username or Password"
             })
