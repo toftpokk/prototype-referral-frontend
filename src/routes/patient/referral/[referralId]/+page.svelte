@@ -4,6 +4,8 @@
     import ReferralView from '$lib/ReferralView.svelte';
     import * as Alert from '$lib/components/ui/alert';
     import { Button } from '$lib/components/ui/button';
+    import * as Card from '$lib/components/ui/card';
+    import * as Table from '$lib/components/ui/table';
     import Checkbox from '$lib/components/ui/checkbox/checkbox.svelte';
     import Label from '$lib/components/ui/label/label.svelte';
     import { ReferralStatus, translateHospital, translateName } from '$lib/global';
@@ -34,12 +36,17 @@
         <p>Loading Referral...</p>
     {:then referral} 
         <ReferralView referral={referral} referralId={data.referralId}/>
-        {#if consentError}
+          <Card.Root class="my-2">
+            <Card.Header class="pb-0">
+              <Card.Title>Consent</Card.Title>
+            </Card.Header>
+            <Card.Content>
+                {#if consentError}
                 <p>Consent Error: {consentError}</p>
-        {/if}
+                {/if}
         {#if referral.ReferralStatus == ReferralStatus.Created}
             {#await translateHospital(referral.Destination)}
-                <p></p>
+                <p class="my-2">a</p>
             {:then destHos}
             <div class="block my-4">
                 <p class="my-2">I, <span class="underline">{referral.FirstName} {referral.LastName}</span> acknowledge the terms set out in this document in relation to my Personal Data:</p>
@@ -67,10 +74,14 @@
             </div>
             {/await}
         {:else if referral.ReferralStatus == ReferralStatus.Consented}
-            <p class="ml-40">You have given your consent. Your referral is being processed</p>
+            <p class="my-2">You have given your consent. Your referral is being processed</p>
         {:else if referral.ReferralStatus == ReferralStatus.Complete}
-            <p></p>
+            <p class="my-2">You have given your consent. Your referral is being processed</p>
+        {:else if referral.ReferralStatus == ReferralStatus.NotGranted}
+            <p class="my-2">The destination hospital has denied the permission to refer. Please contact your doctor.</p>
         {/if}
+            </Card.Content>
+          </Card.Root>
     {:catch}
         <p>Error: Could not fetch referral</p>
     {/await}

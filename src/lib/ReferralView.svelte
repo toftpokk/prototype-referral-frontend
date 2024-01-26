@@ -1,56 +1,59 @@
 <script lang="ts">
+    import * as Table from "./components/ui/table";
     import ReferralStatusBadge from "./ReferralStatusBadge.svelte";
 import { Badge } from "./components/ui/badge";
+    import * as Card from "./components/ui/card";
     import { translateName, type Referral, translateHospital } from "./global";
     export let referral : Referral 
     export let referralId : string 
 </script>
 <style>
     .key {
-        @apply font-semibold text-right pr-2 h-8 text-lg;
+        @apply text-muted-foreground pr-2 h-6 text-base mt-4;
     }
     .val {
-        @apply pl-2 col-span-3 text-xl;
+        @apply col-span-3 text-lg;
     }
 </style>
 
-<div class="grid grid-cols-4">
-    <div class="col-span-1"></div>
-    <div class="col-span-3 font-bold text-xl">Referral</div>
-    <div class="key">ID</div>
-    <div class="val">{referralId}</div>
-    <div class="key">Status</div>
-    <div class="val"><ReferralStatusBadge status={referral.ReferralStatus} class="text-sm"/></div>
-    <div class="key">Origin</div>
-    {#await translateHospital(referral.Origin)}
-        <div class="val">...</div>
-    {:then name}
-        <div class="val">{name} ({referral.Origin})</div>
-    {/await}
-    <div class="key">Destination</div>
-    {#await translateHospital(referral.Destination)}
-        <div class="val">...</div>
-    {:then name}
-        <div class="val">{name} ({referral.Destination})</div>
-    {/await}
-    <div class="key">Reason</div>
-    <div class="val">{referral.Reason}</div>
-    <div class="key">Creation Date</div>
+<Card.Root class="my-2">
+    <Card.Header class="pb-0">
+      <Card.Title>Referral</Card.Title>
+    </Card.Header>
+    <Card.Content>
+        <p class="key">Status</p>
+        <p class="key"><ReferralStatusBadge status={referral.ReferralStatus} class="text-sm"/></p>
+        <p class="key">Origin</p>
+        <p class="val">
+            {#await translateHospital(referral.Origin)}
+                <div>...</div>
+            {:then name}
+                <div>{name} ({referral.Origin})</div>
+            {/await}
+        </p>
+        <p class="key">Destination</p>
+        <p class="val">
+            {#await translateHospital(referral.Destination)}
+                <div>...</div>
+            {:then name}
+                <div>{name} ({referral.Destination})</div>
+            {/await}
+        </p>
+        <p class="key">Reason</p>
+        <p class="val">{referral.Reason}</p>
+        <div class="key">Creation Date</div>
     <div class="val">{new Date(referral.Created*1000).toLocaleString('en-UK')}</div>
-    <div class="col-span-1"></div>
-    <div class="col-span-3 font-bold text-xl mt-4">Patient</div>
-    <!-- <div class="key">Name</div>
-    <div class="val">{translateName(referral)}</div> -->
-    <!-- <div class="key">Citizen ID</div>
-    <div class="val">{referral.CitizenId}</div> -->
-    <div class="key">Gender</div>
-    <div class="val">{referral.Gender}</div>
-    <div class="key">Age</div>
-    <div class="val">{new Date().getFullYear() -  Number(referral.BirthDate.slice(0,4))}</div>
-    <!-- <div class="key">Address</div>
-    <div class="val">{referral.Address}</div>
-    <div class="key">Email</div>
-    <div class="val">{referral.Email}</div>
-    <div class="key">Telephone</div>
-    <div class="val">{referral.Telephone}</div> -->
-</div>
+    </Card.Content>
+  </Card.Root>
+
+  <Card.Root class="my-2">
+    <Card.Header class="pb-0">
+      <Card.Title>Patient</Card.Title>
+    </Card.Header>
+    <Card.Content>
+        <div class="key">Gender</div>
+        <div class="val">{referral.Gender}</div>
+        <div class="key">Age</div>
+        <div class="val">{new Date().getFullYear() -  Number(referral.BirthDate.slice(0,4))}</div>
+    </Card.Content>
+  </Card.Root>

@@ -3,6 +3,7 @@
     import { PUBLIC_CLIENT_FRONTEND_URL, PUBLIC_HOSPITAL_ID } from '$env/static/public';
     import ReferralView from '$lib/ReferralView.svelte';
     import { Button } from '$lib/components/ui/button';
+    import * as Card from '$lib/components/ui/card';
     import { ReferralStatus, translateFileState } from '$lib/global';
     export let data : import('./$types').PageData;
     let grantError = ""
@@ -26,28 +27,42 @@
 </script>
 <div class="mx-auto max-w-[40rem]">
     <ReferralView referral={data.referral} referralId={data.referralId}/>
-    {#if data.referral.Origin == PUBLIC_HOSPITAL_ID}
-        <!--I am origin-->
-    {:else}
-        <div class="ml-40">
-            {#if grantError}
-                <p>Grant Error: {grantError}</p>
-            {/if}
-            <div class="my-4">
-            {#if data.referral.ReferralStatus == ReferralStatus.Consented}
-                <Button on:click={grant(true)}>Grant Permission to Refer</Button>
-                <Button on:click={grant(false)} variant="destructive">Deny Permission to Refer</Button>
-            {:else if data.referral.ReferralStatus == ReferralStatus.Created}
-                <p>Referral awaiting patient consent</p>
-            {:else}
-                <p>You have given permission to this referral</p>
-            {/if}
-        </div>
-        </div>
-    {/if}
-    <div class=" ml-40">
-    {#if data.referral.Origin != PUBLIC_HOSPITAL_ID}
-            <div class="col-span-3 font-bold text-xl">Files</div>
+    <Card.Root class="my-2">
+        <Card.Header class="pb-0">
+          <Card.Title>Grant</Card.Title>
+        </Card.Header>
+        <Card.Content>
+            {#if data.referral.Origin == PUBLIC_HOSPITAL_ID}
+            <!--I am origin-->
+        {:else}
+            <div>
+                {#if grantError}
+                    <p>Grant Error: {grantError}</p>
+                {/if}
+                <div class="my-4">
+                {#if data.referral.ReferralStatus == ReferralStatus.Consented}
+                    <Button on:click={grant(true)}>Grant Permission to Refer</Button>
+                    <Button on:click={grant(false)} variant="destructive">Deny Permission to Refer</Button>
+                {:else if data.referral.ReferralStatus == ReferralStatus.Created}
+                    <p>Referral is awaiting patient consent</p>
+                {:else if data.referral.ReferralStatus == ReferralStatus.NotGranted}
+                    <p>You have denied permission to this referral</p>
+                {:else}
+                    <p>You have given permission to this referral</p>
+                {/if}
+                </div>
+            </div>
+        {/if}
+        </Card.Content>
+      </Card.Root>
+
+
+      <Card.Root class="my-2">
+        <Card.Header class="">
+          <Card.Title>Files</Card.Title>
+        </Card.Header>
+        <Card.Content>
+            {#if data.referral.Origin != PUBLIC_HOSPITAL_ID}
                 <ul>
                     {#each data.referralFiles as file}
                     <li class="w-50 flex justify-between">
@@ -63,5 +78,6 @@
                     {/each}
                 </ul>
     {/if}
-    </div>
+        </Card.Content>
+      </Card.Root>
 </div>
