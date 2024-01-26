@@ -41,6 +41,8 @@ import { Badge } from "./components/ui/badge";
         </p>
         <p class="key">Reason</p>
         <p class="val">{referral.Reason}</p>
+        <p class="key">Department</p>
+        <p class="val">{referral.Department}</p>
         <div class="key">Creation Date</div>
     <div class="val">{new Date(referral.Created*1000).toLocaleString('en-UK')}</div>
     </Card.Content>
