@@ -26,7 +26,6 @@
     }
 </script>
 <div class="mx-auto max-w-[40rem]">
-    <ReferralView referral={data.referral} referralId={data.referralId}/>
     <Card.Root class="my-2">
         <Card.Header class="pb-0">
           <Card.Title>Grant</Card.Title>
@@ -44,11 +43,11 @@
                     <Button on:click={grant(true)}>Grant Permission to Refer</Button>
                     <Button on:click={grant(false)} variant="destructive">Deny Permission to Refer</Button>
                 {:else if data.referral.ReferralStatus == ReferralStatus.Created}
-                    <p>Referral is awaiting patient consent</p>
+                    <p>The referral is awaiting patient consent</p>
                 {:else if data.referral.ReferralStatus == ReferralStatus.NotGranted}
-                    <p>You have denied permission to this referral</p>
+                    <p>You have denied permission to refer.</p>
                 {:else}
-                    <p>You have given permission to this referral</p>
+                    <p>You have given permission to refer. The referral is being processed.</p>
                 {/if}
                 </div>
             </div>
@@ -82,4 +81,5 @@
     {/if}
         </Card.Content>
       </Card.Root>
+      <ReferralView referral={data.referral} referralId={data.referralId}/>
 </div>

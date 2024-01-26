@@ -34,8 +34,7 @@
 <div class="mx-auto max-w-[40rem]">
     {#await data.referral}
         <p>Loading Referral...</p>
-    {:then referral} 
-        <ReferralView referral={referral} referralId={data.referralId}/>
+    {:then referral}
           <Card.Root class="my-2">
             <Card.Header class="pb-0">
               <Card.Title>Consent</Card.Title>
@@ -81,7 +80,8 @@
             <p class="my-2">The destination hospital has denied the permission to refer. Please contact your doctor.</p>
         {/if}
             </Card.Content>
-          </Card.Root>
+          </Card.Root> 
+          <ReferralView referral={referral} referralId={data.referralId}/>  
     {:catch}
         <p>Error: Could not fetch referral</p>
     {/await}
