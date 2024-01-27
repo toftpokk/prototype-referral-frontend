@@ -5,8 +5,8 @@ PUBLIC_HOSPITAL_ID=1111 PUBLIC_HOSPITAL_NAME="First Government Hospital"  npx vi
 ```
 
 TODO
-- Transfer data to his button/ Transfer data to doc
-- Referral Viewable by dest doctor
+X Transfer data to his button/ Transfer data to doc
+X Referral Viewable by dest doctor
 - Speed test only data transfer
 - Thoughts? Form
 - Slides
