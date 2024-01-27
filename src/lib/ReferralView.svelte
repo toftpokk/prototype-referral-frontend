@@ -22,6 +22,8 @@ import { Badge } from "./components/ui/badge";
       <Card.Title>Referral</Card.Title>
     </Card.Header>
     <Card.Content>
+        <p class="key">ID</p>
+        <p class="val">{referralId}</p>
         <p class="key">Status</p>
         <p class="key"><ReferralStatusBadge status={referral.ReferralStatus} class="text-sm"/></p>
         <p class="key">Origin</p>
@@ -30,6 +32,8 @@ import { Badge } from "./components/ui/badge";
                 <div>...</div>
             {:then name}
                 <div>{name} ({referral.Origin})</div>
+            {:catch e}
+            <div>{e}</div>
             {/await}
         </p>
         <p class="key">Destination</p>

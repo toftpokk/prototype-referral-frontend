@@ -4,115 +4,32 @@
       import * as Alert from "$lib/components/ui/alert";
       import Spinner from "$lib/Spinner.svelte";
     import { Input } from "$lib/components/ui/input";
-    import { PUBLIC_SERVER_FRONTEND_URL } from "$env/static/public";
-  
+    import { env } from "$env/dynamic/public";
+    import { enhance } from "$app/forms";
+    export let form : import('./$types').ActionData
     // export let data
-    let submitStatus = ""
-    let submitError = ""
-    let submitErrorTitle = ""
-    let ndidId = ""
-    function checkPassword(str) {
-    // Check if string has at least 8 characters
-    if (str.length < 8) {
-        return false;
-    }
-    
-    // Check if string has at least 1 upper case letter
-    if (!/[A-Z]/.test(str)) {
-        return false;
-    }
-    
-    // Check if string has at least 1 lower case letter
-    if (!/[a-z]/.test(str)) {
-        return false;
-    }
-    
-    // If all conditions pass, return true
-    return true;
-}
-    async function onSubmit(e : SubmitEvent){
-      const errList : string[] = []
-      e.preventDefault()
-      if(!e.target){
-        submitErrorTitle = "Fatal Error"
-        submitError = "Unable to find data"
-        return false
-      }
-      const target : any = e.target
-      const formData = new FormData(target)
-      // Validation
-      const username = formData.get("Username") as string
-      if(username== ""){
-        errList.push("Username")
-      }
-      const password = formData.get("Password")
-      if(password== ""){
-        errList.push("Password")
-      }
-      const password_check = formData.get("password-check") as string
-      if(password_check== ""){
-        errList.push("Re-type Password")
-      }
-      const email = formData.get("Email") as string
-      if(email== ""){
-        errList.push("Email")
-      }
-      const citizenId = formData.get("CitizenId") as string
-      if(citizenId== ""){
-        errList.push("CitizenId")
-      }
-      if(errList.length > 0){
-        submitErrorTitle = "Validation Error"
-        submitError = "Required Fields: "+errList.join(", ")
-        return false
-      }
-      if(password_check != password) {
-        submitErrorTitle = "Validation Error"
-        submitError = "Password and Re-type Password do not match"
-        return false
-      }
-      if(!checkPassword(password)){
-        submitErrorTitle = "Validation Error"
-        submitError = "Password does not meet requirements"
-        return false
-      }
-      const formObject = JSON.stringify(Object.fromEntries(formData))
-      submitStatus = "submitting"
-        const response = await fetch(PUBLIC_SERVER_FRONTEND_URL+"/register",{
-          method: "POST",
-          body: formObject
-        })
-        if(response.status != 201){
-          const e = await response.json()
-          submitStatus = "error"
-          submitErrorTitle = "Submission Error"
-          submitError = e.message
-          return false
-        }
-        const responseBody =  response.json()
-        submitStatus = "complete"
-        submitError = ""
-        submitErrorTitle = ""
-        ndidId = responseBody.id
-      return true
-    }
+    // let submitStatus = ""
+    // let submitError = ""
+    // let submitErrorTitle = ""
+    // let ndidId = ""
+
   </script>
 
 
 
-  {#if submitStatus == "submitting"}
+  <!-- {#if form == "submitting"}
     <div class="mx-auto w-[20rem] text-xl text-center">Submitting...</div>
-    <Spinner class="mx-auto mt-4 w-[3rem]"/>
-  {:else if submitStatus == "complete"}
+    <Spinner class="mx-auto mt-4 w-[3rem]"/> -->
+  {#if form?.success}
   <div class="mx-auto w-[20rem] text-xl text-center">Submission Complete</div>
   <div class="mx-auto w-[20rem] text-2xl mt-8 text-center">Please Verify with NDID</div>
-  <div class="mx-auto w-[20rem] text-2xl mt-8 text-center">Ref: {ndidId}</div>
+  <div class="mx-auto w-[20rem] text-2xl mt-8 text-center">Ref: {form.ndid}</div>
   <div class="mx-auto text-center">
     <!-- <Button href={"/doctor/referral/"+referralId}>View Referral</Button> -->
     <Button variant="outline" class="inline-block mt-8" href="/">Return to Login</Button>
   </div>
   {:else}
-  <form class="mx-auto max-w-[40rem]" on:submit={onSubmit}>
+  <form class="mx-auto max-w-[40rem]" method="POST" use:enhance>
     <Label class="font-semibold text-[11pt] block mb-1 mt-5"
       >Username<span class="text-red-500">*</span></Label
     >
@@ -164,11 +81,11 @@
     name="CitizenId"
     class="flex h-10 w-full rounded-md border shadow-sm border-input bg-transparent px-3 py-2 text-sm ring-offset-background file:border-0  file:bg-transparent file:text-foreground file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
     />
-    {#if submitError != ""}
+    {#if form?.error}
       <Alert.Root class="my-4" variant="destructive">
-        <Alert.Title>{submitErrorTitle}</Alert.Title>
+        <Alert.Title>{form.error}</Alert.Title>
         <Alert.Description>
-          {submitError}
+          {form.message}
         </Alert.Description>
       </Alert.Root>
     {/if}

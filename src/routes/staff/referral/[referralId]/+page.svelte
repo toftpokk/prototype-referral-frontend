@@ -1,6 +1,6 @@
 <script lang="ts">
     import { invalidateAll } from '$app/navigation';
-    import { PUBLIC_CLIENT_FRONTEND_URL, PUBLIC_HOSPITAL_ID } from '$env/static/public';
+    import { env } from '$env/dynamic/public';
     import ReferralView from '$lib/ReferralView.svelte';
     import { Button } from '$lib/components/ui/button';
     import * as Card from '$lib/components/ui/card';
@@ -12,7 +12,7 @@
             Granted: verdict
         })
         console.log(payload)
-        const response = fetch(PUBLIC_CLIENT_FRONTEND_URL+"/referral/"+data.referralId+"/grant",{
+        const response = fetch(env.PUBLIC_CLIENT_FRONTEND_URL+"/referral/"+data.referralId+"/grant",{
             method: "POST",
             body: payload
         }).then(async (d: Response)=>{
@@ -31,19 +31,30 @@
           <Card.Title>Grant</Card.Title>
         </Card.Header>
         <Card.Content>
-            {#if data.referral.Origin == PUBLIC_HOSPITAL_ID}
+        {#if data.referral.Origin == env.PUBLIC_HOSPITAL_ID}
             <!--I am origin-->
+            {#if data.referral.ReferralStatus == ReferralStatus.Created}
+                <p>The referral is awaiting patient consent</p>
+            {:else if data.referral.ReferralStatus == ReferralStatus.Consented}
+                <p>The referral is awaiting permisson to refer</p>
+            
+            {:else if data.referral.ReferralStatus == ReferralStatus.NotGranted}
+                <p>The destination has denied permission to refer.</p>
+            {:else}
+                <p>The destination has given permission to refer. The referral is being processed.</p>
+            {/if}
         {:else}
             <div>
                 {#if grantError}
                     <p>Grant Error: {grantError}</p>
                 {/if}
                 <div class="my-4">
-                {#if data.referral.ReferralStatus == ReferralStatus.Consented}
+                {#if data.referral.ReferralStatus == ReferralStatus.Created}
+                    <p>The referral is awaiting patient consent</p>
+                {:else if data.referral.ReferralStatus == ReferralStatus.Consented}
                     <Button on:click={grant(true)}>Grant Permission to Refer</Button>
                     <Button on:click={grant(false)} variant="destructive">Deny Permission to Refer</Button>
-                {:else if data.referral.ReferralStatus == ReferralStatus.Created}
-                    <p>The referral is awaiting patient consent</p>
+                
                 {:else if data.referral.ReferralStatus == ReferralStatus.NotGranted}
                     <p>You have denied permission to refer.</p>
                 {:else}
@@ -61,24 +72,38 @@
           <Card.Title>Files</Card.Title>
         </Card.Header>
         <Card.Content>
-            {#if data.referral.Origin != PUBLIC_HOSPITAL_ID}
+            {#if data.referral.Origin != env.PUBLIC_HOSPITAL_ID}
+                {#if data.referral.ReferralStatus != ReferralStatus.Complete}
+                    <p>Patient data is not available until referral is completed</p>
+                {:else}
                 <ul>
                     {#each data.referralFiles as file}
                     <li class="w-50 flex justify-between">
                         <span>{file}</span>
                         {#if data.referral.ReferralStatus == ReferralStatus.Complete}
-                             <!-- content here -->
-                             <!-- href={PUBLIC_CLIENT_FRONTEND_URL+"/referral/"+data.referralId+"/download/"+file} -->
-                            <a class="underline" href={PUBLIC_CLIENT_FRONTEND_URL+"/referral/"+data.referralId+"/download/"+file} download>Download</a>
+                            <a class="underline" href={env.PUBLIC_CLIENT_FRONTEND_URL+"/referral/"+data.referralId+"/download/"+file} download>Download</a>
                         {:else}
                             <span>{translateFileState(data.referral.ReferralStatus)}</span>
                         {/if}
                     </li>
-                    {:else}
-                    <p>Patient data is not available until referral is completed</p>
                     {/each}
                 </ul>
-    {/if}
+                {/if}
+            {:else}
+                <ul>
+                    {#each data.referralFiles as file}
+                    <li class="w-50 flex justify-between">
+                        <span>{file}</span>
+                        {#if data.referral.ReferralStatus == ReferralStatus.Complete}
+                        <span>Done</span>
+                            <!-- <a class="underline" href={env.PUBLIC_CLIENT_FRONTEND_URL+"/referral/"+data.referralId+"/download/"+file} download>Download</a> -->
+                        {:else}
+                            <span>{translateFileState(data.referral.ReferralStatus)}</span>
+                        {/if}
+                    </li>
+                    {/each}
+                </ul>
+            {/if}
         </Card.Content>
       </Card.Root>
       <ReferralView referral={data.referral} referralId={data.referralId}/>

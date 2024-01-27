@@ -1,6 +1,5 @@
 <script lang="ts">
     import { invalidateAll } from '$app/navigation';
-    import { PUBLIC_SERVER_FRONTEND_URL } from '$env/static/public';
     import ReferralView from '$lib/ReferralView.svelte';
     import * as Alert from '$lib/components/ui/alert';
     import { Button, buttonVariants } from '$lib/components/ui/button';
@@ -11,6 +10,7 @@
     import Label from '$lib/components/ui/label/label.svelte';
     import { ReferralStatus, translateHospital, translateName } from '$lib/global';
     import { cn } from '$lib/utils';
+    import { enhance } from '$app/forms';
 
     export let form : import('./$types').ActionData
     export let data : import('./$types').PageData;
@@ -28,7 +28,7 @@
             {#await translateHospital(referral.Destination)}
                 <p class="my-2">Loading...</p>
             {:then destHos}
-            <form class="block my-4" method="POST">
+            <form class="block my-4" method="POST" use:enhance>
                 <p class="my-2">I, <span class="underline">{referral.FirstName} {referral.LastName}</span> acknowledge the terms set out in this document in relation to my Personal Data:</p>
                 <ol>
                     <li class="list-decimal ml-4">That I give permission to <span class="font-bold">Ministry of Public Health</span> to transfer or
