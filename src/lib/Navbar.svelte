@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { PUBLIC_HOSPITAL_NAME, PUBLIC_ROLE } from "$env/static/public";
+    import { env } from "$env/dynamic/public";
     import UserMenu from "./UserMenu.svelte";
     import { ChevronDown, Home, Shield, Stethoscope, User } from "lucide-svelte";
 
@@ -13,9 +13,9 @@
             <Home size="30" class="h-8"/>
         </a>
         <div class="pb-1">
-        {#if PUBLIC_ROLE == "Client"}
+        {#if env.PUBLIC_ROLE == "Client"}
                 <h2 class="text-xl font-bold">{title}</h2>
-                <h2 class="leading-3 text-muted-foreground">{PUBLIC_HOSPITAL_NAME}</h2>
+                <h2 class="leading-3 text-muted-foreground">{env.PUBLIC_HOSPITAL_NAME}</h2>
         {:else}
             <h2 class="text-xl font-bold">{title}</h2>
             <h2 class="leading-3 text-muted-foreground">Referral Server</h2>

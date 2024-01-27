@@ -6,13 +6,13 @@
     import { Input } from '$lib/components/ui/input';
     import Label from '$lib/components/ui/label/label.svelte';
     import * as Alert from '$lib/components/ui/alert';
-    import { PUBLIC_ROLE } from '$env/static/public';
+    import { env } from '$env/dynamic/public';
     export let form : import('./$types').ActionData
     let role = {value: "", label:""}
 </script>
 <div class="flex flex-row w-full h-svh">
     <div class="basis-7/12 h-svh overflow-clip">
-        {#if PUBLIC_ROLE == "Client"}
+        {#if env.PUBLIC_ROLE == "Client"}
             <img src="/operating-doctor.jpg" alt="hero" class="basis-7/12 object-cover h-full">
         {:else}
             <img src="/patient.jpg" alt="hero" class="basis-7/12 object-cover h-full">
@@ -38,7 +38,7 @@
                       <Select.Value placeholder="Select a Role" />
                     </Select.Trigger>
                     <Select.Content>
-                      {#if PUBLIC_ROLE == "Client"}
+                      {#if env.PUBLIC_ROLE == "Client"}
                       <Select.Item value="doctor">Doctor</Select.Item>
                       <Select.Item value="staff">Staff</Select.Item>
                       {:else}
@@ -54,7 +54,7 @@
                 <Input type="submit" value="Continue &rarr;" class={buttonVariants()}/>
 
                 <!-- Essential for maintaining size: TODO understand -->
-                {#if PUBLIC_ROLE != "Client"}
+                {#if env.PUBLIC_ROLE != "Client"}
                     <p class="px-4">For new users or users with no account, please register <a class="underline text-blue-500" href="/register">here</a></p>
                 {/if}
             </form>

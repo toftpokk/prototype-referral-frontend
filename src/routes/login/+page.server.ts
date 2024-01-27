@@ -1,4 +1,4 @@
-import { PUBLIC_SERVER_FRONTEND_URL } from "$env/static/public";
+import { env } from "$env/dynamic/public";
 import { fail, redirect, type ActionResult } from "@sveltejs/kit";
 
 export const actions : import('./$types').Actions = {
@@ -20,7 +20,7 @@ export const actions : import('./$types').Actions = {
         const password = data.get("password") as string
         let response : Response
         try {
-            response = await fetch(PUBLIC_SERVER_FRONTEND_URL+"/login",{
+            response = await fetch(env.PUBLIC_SERVER_FRONTEND_URL+"/login",{
                 method: "POST",
                 body: JSON.stringify({
                     Username: username,

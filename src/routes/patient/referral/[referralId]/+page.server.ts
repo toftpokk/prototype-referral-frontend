@@ -1,11 +1,11 @@
-import { PUBLIC_SERVER_FRONTEND_URL } from "$env/static/public"
+import { env } from "$env/dynamic/public"
 import type { Referral } from "$lib/global"
 import { fail } from "@sveltejs/kit"
 import type { PageServerLoad } from "./$types"
 
 export const load : PageServerLoad = ({ params }) => {
     const referralId = params.referralId
-    const response = fetch(PUBLIC_SERVER_FRONTEND_URL+"/referral/"+referralId)
+    const response = fetch(env.PUBLIC_SERVER_FRONTEND_URL+"/referral/"+referralId)
         .then(async (d: Response)=>{
             if(d.status != 200){
                 throw await d.json()
@@ -32,7 +32,7 @@ export const actions : import('./$types').Actions = {
         }
         let response : Response
         try{
-            response = await fetch(PUBLIC_SERVER_FRONTEND_URL+"/referral/"+params.referralId+"/consent?username="+cookies.get("username"),{
+            response = await fetch(env.PUBLIC_SERVER_FRONTEND_URL+"/referral/"+params.referralId+"/consent?username="+cookies.get("username"),{
                 method: "POST"
             })
         } catch(e){

@@ -1,8 +1,8 @@
-import { PUBLIC_CLIENT_FRONTEND_URL } from '$env/static/public'
+import { env } from '$env/dynamic/public'
 import type { HospitalData, PatientData } from '$lib/global'
 
 export const load = ({ params }) => {
-  const response = fetch(PUBLIC_CLIENT_FRONTEND_URL + "/patient")
+  const response = fetch(env.PUBLIC_CLIENT_FRONTEND_URL + "/patient")
   .then(async (d: Response)=>{
       if(d.status != 200){
           throw await d.json()
@@ -12,7 +12,7 @@ export const load = ({ params }) => {
     .catch((e) => {
       return new Error("a")
     })
-    const response2 = fetch(PUBLIC_CLIENT_FRONTEND_URL + "/hospitals")
+    const response2 = fetch(env.PUBLIC_CLIENT_FRONTEND_URL + "/hospitals")
     .then(async (d: Response)=>{
         if(d.status != 200){
             throw await d.json()

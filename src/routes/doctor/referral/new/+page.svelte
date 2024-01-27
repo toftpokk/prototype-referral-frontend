@@ -7,7 +7,7 @@
     import HospitalSearch from "./HospitalSearch.svelte";
     import DataSelect from "./DataSelect.svelte";
     import { type HospitalData, type PatientData, type referralMeta } from "$lib/global";
-    import { PUBLIC_CLIENT_FRONTEND_URL, PUBLIC_HOSPITAL_ID } from "$env/static/public";
+    import { env } from "$env/dynamic/public";
     import * as Alert from "$lib/components/ui/alert";
     import { goto } from "$app/navigation";
     import Spinner from "$lib/Spinner.svelte";
@@ -97,7 +97,7 @@
       return false
     }
     submitError = ""
-    formData.set("Origin",PUBLIC_HOSPITAL_ID) // Sent, but not used
+    formData.set("Origin",env.PUBLIC_HOSPITAL_ID) // Sent, but not used
     formData.set("Destination", hospital.HospitalId)
     formData.set("Department", department)
     // Reason set
@@ -127,7 +127,7 @@
     }
     // submit doctorId as ? querystring
     submitStatus = "submitting"
-      fetch(PUBLIC_CLIENT_FRONTEND_URL+"/",{
+      fetch(env.PUBLIC_CLIENT_FRONTEND_URL+"/",{
         method: "POST",
         body: formData
       })

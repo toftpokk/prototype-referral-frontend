@@ -1,13 +1,13 @@
 <script lang="ts">
   import * as Dialog from "$lib/components/ui/dialog";
   import { Button, buttonVariants } from "$lib/components/ui/button";
-  import { PUBLIC_CLIENT_FRONTEND_URL } from "$env/static/public";
+  import { env } from "$env/dynamic/public";
   import Summary from "./Summary.svelte";
 
   export let patientId: string;
   let data: Promise<Data>;
   async function getData(pId: string) {
-    return fetch(PUBLIC_CLIENT_FRONTEND_URL + "/patient/" + pId + "/summary", {
+    return fetch(env.PUBLIC_CLIENT_FRONTEND_URL + "/patient/" + pId + "/summary", {
       method: "GET",
     })
       .then(async (d: Response) => {

@@ -1,9 +1,9 @@
-import { PUBLIC_CLIENT_FRONTEND_URL } from "$env/static/public";
+import { env } from "$env/dynamic/public";
 import type { Referral } from "$lib/global"
 import { error } from "@sveltejs/kit";
 
 export function load(){
-    const response = fetch(PUBLIC_CLIENT_FRONTEND_URL+"/")
+    const response = fetch(env.PUBLIC_CLIENT_FRONTEND_URL+"/")
     .then(async (d: Response)=>{
         if(d.status != 200){
             throw await d.json()

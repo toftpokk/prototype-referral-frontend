@@ -6,7 +6,7 @@
   import { Button, buttonVariants } from "$lib/components/ui/button";
     import { addSelectedRows } from "svelte-headless-table/plugins";
     import type { HospitalData } from "$lib/global";
-    import { PUBLIC_HOSPITAL_ID } from "$env/static/public";
+    import { env } from "$env/dynamic/public";
     import { cn } from "$lib/utils";
 export let data : HospitalData[] = []
 const table = createTable(readable(data),{
@@ -39,7 +39,7 @@ function getDataId(row: any){
   return row.dataId
 }
 export let dataView = "Find Hospital"
-const selfHospital = PUBLIC_HOSPITAL_ID
+const selfHospital = env.PUBLIC_HOSPITAL_ID
 </script>
 
 <Dialog.Root open={dialogOpen} onOpenChange={setOpen}>

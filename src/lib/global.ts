@@ -1,4 +1,4 @@
-import { PUBLIC_CLIENT_FRONTEND_URL } from "$env/static/public";
+import { env } from "$env/dynamic/public";
 
 export enum ReferralStatus {
     Created = "Created",
@@ -137,7 +137,6 @@ export function translateName(obj : {Prefix: string, FirstName: string, LastName
 }
 
 let hospitalCache : HospitalData[] = []
-
 export async function translateHospital(hcode: string) : Promise<string>{
     // Check if in cache
     let filtered = hospitalCache.filter((d)=>d.HospitalId == hcode)
@@ -147,7 +146,7 @@ export async function translateHospital(hcode: string) : Promise<string>{
     // Not -> fetch
     let response
     try{
-        response = await fetch(PUBLIC_CLIENT_FRONTEND_URL + "/hospitals")
+        response = await fetch(env.PUBLIC_CLIENT_FRONTEND_URL + "/hospitals")
         .then(async (d: Response)=>{
             if(d.status != 200){
                 throw await d.json()

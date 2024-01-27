@@ -4,7 +4,7 @@
     import { Label } from "$lib/components/ui/label";
     import * as Alert from "$lib/components/ui/alert";
     import { Input } from "$lib/components/ui/input";
-    import { PUBLIC_SERVER_FRONTEND_URL } from "$env/static/public";
+    import { env } from "$env/dynamic/public";
 
     let submitStatus = "";
     let submitError = "";
@@ -33,7 +33,7 @@
             return false
         }
         let formObject = JSON.stringify(Object.fromEntries(formData));
-        fetch(PUBLIC_SERVER_FRONTEND_URL+"/hospital",{
+        fetch(env.PUBLIC_SERVER_FRONTEND_URL+"/hospital",{
             method: "POST",
             body: formObject
         })
