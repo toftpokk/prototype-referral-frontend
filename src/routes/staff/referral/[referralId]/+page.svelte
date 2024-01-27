@@ -2,6 +2,7 @@
     import { invalidateAll } from '$app/navigation';
     import { env } from '$env/dynamic/public';
     import ReferralView from '$lib/ReferralView.svelte';
+    import FileView from '$lib/FileView.svelte';
     import { Button } from '$lib/components/ui/button';
     import * as Card from '$lib/components/ui/card';
     import { ReferralStatus, translateFileState } from '$lib/global';
@@ -76,52 +77,14 @@
         {/if}
         </Card.Content>
       </Card.Root>
-
-
-      <Card.Root class="my-2">
-        <Card.Header class="">
-          <Card.Title>Files</Card.Title>
-        </Card.Header>
-        <Card.Content>
-            {#if data.referral.Origin != env.PUBLIC_HOSPITAL_ID}
-                {#if data.referral.ReferralStatus != ReferralStatus.Complete}
-                    <p>Patient data is not available until referral is completed</p>
-                {:else}
-                <ul>
-                    {#each data.referralFiles as file}
-                    <li class="w-50 flex justify-between">
-                        <span>{file}</span>
-                        {#if data.referral.ReferralStatus == ReferralStatus.Complete}
-                            <!-- <a class="underline" href={env.PUBLIC_CLIENT_FRONTEND_URL+"/referral/"+data.referralId+"/download/"+file} download>Download</a> -->
-                            <span>Done</span>
-                        {:else}
-                            <span>{translateFileState(data.referral.ReferralStatus)}</span>
-                        {/if}
-                    </li>
-                    {/each}
-                </ul>
-                {/if}
-                {#if !data.isAssigned}
-                    <Button on:click={sendReferral}>Send Referral to Doctor</Button>
-                {:else}
-                <Button disabled>This referral has been transferred to HIS</Button>
-                {/if}
-            {:else}
-                <ul>
-                    {#each data.referralFiles as file}
-                    <li class="w-50 flex justify-between">
-                        <span>{file}</span>
-                        {#if data.referral.ReferralStatus == ReferralStatus.Complete}
-                        <span>Done</span>
-                            <!-- <a class="underline" href={env.PUBLIC_CLIENT_FRONTEND_URL+"/referral/"+data.referralId+"/download/"+file} download>Download</a> -->
-                        {:else}
-                            <span>{translateFileState(data.referral.ReferralStatus)}</span>
-                        {/if}
-                    </li>
-                    {/each}
-                </ul>
-            {/if}
-        </Card.Content>
-      </Card.Root>
+        <FileView 
+        referral={data.referral}
+        referralId={data.referralId}
+        files={data.referralFiles}
+        isAssigned={data.isAssigned}
+        isOrigin={data.referral.Origin == env.PUBLIC_HOSPITAL_ID}
+        isDoc={false}
+        sendReferral={sendReferral}
+        ></FileView>
       <ReferralView referral={data.referral} referralId={data.referralId}/>
 </div>
