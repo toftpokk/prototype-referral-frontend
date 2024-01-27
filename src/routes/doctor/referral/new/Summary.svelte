@@ -14,13 +14,14 @@
       Id: string;
       Encounter: string;
       Name: string;
-      Value: string;
+      Value: string|Number;
       Unit: string;
     }[];
   };
   export let data: Data[];
   let dataFix : (Data & {Start: string})[];
   export let checks : Record<string,boolean> = {};
+  export let hasCheck = true;
   function resetCheck(){
     checks = {}
   }
@@ -63,7 +64,9 @@
       <Accordion.Root>
         {#each dataFix as encounter}
           <Accordion.Item value={encounter.Encounter.Id} class="flex">
-            <input type="checkbox" class="my-5 w-7 inline-block mb-auto accent-primary" value={encounter.Encounter.Id} bind:checked={checks[encounter.Encounter.Id]}/>
+            {#if hasCheck}
+              <input type="checkbox" class="my-5 w-7 inline-block mb-auto accent-primary" value={encounter.Encounter.Id} bind:checked={checks[encounter.Encounter.Id]}/>
+            {/if}
             <div class="flex-grow flex-col">
             <Accordion.Trigger class="flex-row flex">
               <span class="w-full text-left flex" >
@@ -87,6 +90,8 @@
             </Accordion.Content>
           </div>
           </Accordion.Item>
+        {:else}
+          <p>No data found</p>
         {/each}
       </Accordion.Root>
     </form>

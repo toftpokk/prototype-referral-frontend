@@ -12,11 +12,11 @@ export let isDoc : boolean = false
         <Table.Row>
             <Table.Head class="w-[50px] text-right">ID</Table.Head>
             {#if isDoc}
-                <Table.Head>Patient</Table.Head>
+                <Table.Head class="min-w-[10rem]">Patient</Table.Head>
             {/if}
-            <Table.Head>Origin</Table.Head>
-            <Table.Head>Destination</Table.Head>
-            <Table.Head>Created</Table.Head>
+            <Table.Head class="min-w-[13rem]">Origin</Table.Head>
+            <Table.Head class="min-w-[13rem]">Destination</Table.Head>
+            <Table.Head class="min-w-[4rem]">Created</Table.Head>
             <Table.Head>Reason</Table.Head>
             <Table.Head>Status</Table.Head>
             <Table.Head>Actions</Table.Head>

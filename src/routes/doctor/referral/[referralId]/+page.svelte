@@ -19,6 +19,7 @@
             isAssigned={data.isAssigned}
             isOrigin={referral.Origin == env.PUBLIC_HOSPITAL_ID}
             isDoc={true}
+            data={data.referralDatafile}
           >
           </FileView>
     {:catch}

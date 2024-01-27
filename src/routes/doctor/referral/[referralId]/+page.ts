@@ -38,11 +38,27 @@ export const load : PageLoad = async ({ params }) => {
     .catch((e) => {
         throw new Error(e)
     })
+    let referralDatafile = {Summary:[],Diagnosis:"",History:""}
+    if(isAssigned){
+        try{
+            referralDatafile = await fetch(env.PUBLIC_CLIENT_FRONTEND_URL+"/assign/"+referralId+"/data")
+            .then(async(d: Response)=>{
+                if (d.status != 200) {
+                    throw d.status
+                }
+                return await d.json()
+            })
+        } catch(e){
+            console.log("aaa", e)
+            referralDatafile = {Summary:[],Diagnosis:"",History:""}
+        }
+    }
     return {
         title: "Referral "+referralId,
         referralId: referralId,
         referral: response as Promise<Referral>,
         referralFiles: files,
-        isAssigned: isAssigned
+        isAssigned: isAssigned,
+        referralDatafile: referralDatafile
     } 
 }

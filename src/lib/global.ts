@@ -82,6 +82,26 @@ export type PatientData = {
     Telephone: string;
 }
 
+export type ReferralDataFile = {
+    Summary: {
+        Encounter: {
+          Id: string;
+          Name: string;
+          Reason: string;
+          Start: string;
+        },
+        Observations: {
+          Id: string;
+          Encounter: string;
+          Name: string;
+          Value: Number;
+          Unit: string;
+        }[];
+    }[],
+    Diagnosis: string,
+    History: string
+}
+
 export type Consent = {
     Id: number; // server generated
     Referral: number;
