@@ -23,42 +23,6 @@
         // Medication  > No
         // MedicationAdministration  > YES
         // Provenance > No?
-    
-    // const rt : string[] = []
-    const type_count : Record<string, number>= {}
-    // ab.entry.forEach((entry)=>{
-    //     // console.log(entry.fullUrl)
-    //     const tt =  entry.resource.resourceType
-    //     if(!Object.keys(type_count).includes(tt)){
-    //         type_count[tt] = 1
-    //     }
-    //     else{
-    //         type_count[tt] += 1
-    //     }
-    //     if(tt == "Encounter"){
-    //         // console.log(entry.resource.period)
-    //         // console.log(entry.resource.type[0].text)
-    //     }
-    //     // if(tt == "Media"){
-    //     //         console.log(entry.resource)
-    //     //     }
-    //     // if(!rt.includes(tt)){
-    //     //     // if(tt == "Patient"){
-    //     //     //     if(typeof entry.resource.identifier == "object"){
-
-    //     //     //         let ssn = entry.resource.identifier.filter((identifier)=>{
-    //     //     //             return identifier.system == "http://hl7.org/fhir/sid/us-ssn"
-    //     //     //         })
-    //     //     //         console.log(ssn[0].value)
-    //     //     //     }
-    //     //     //     // console.log(entry.resource.identifier[2].)
-    //     //     // }
-            
-    //     //     // console.log(entry.resource)
-    //     //     rt.push(tt)
-    //     // }
-    // })
-    // console.log(type_count)
 </script>
 
 <svelte:head>
@@ -74,8 +38,11 @@
         <div class="mx-auto w-[20rem] text-xl text-center">Loading...</div>
         <Spinner class="mx-auto mt-4 w-[3rem]"/>
     </div>
-    {:then referrals}
-        <ReferralTable isDoc={true} referrals={referrals} referralLink="/doctor/referral"/>
+    {:then r}
+        <h2 class="text-xl">Refer-Out</h2>
+        <ReferralTable isDoc={true} referrals={r.referrals.referrals} referralLink="/doctor/referral"/>
+        <h2 class="text-xl">Refer-In</h2>
+        <ReferralTable isDoc={true} referrals={r.doctorReferrals} referralLink="/doctor/referral"/>
     {:catch}
         <div class="mx-auto w-[20rem] text-xl text-center">Error: Could not load referral data</div>
     {/await}

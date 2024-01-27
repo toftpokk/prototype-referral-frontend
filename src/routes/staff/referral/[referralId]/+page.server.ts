@@ -4,6 +4,7 @@ import type { PageServerLoad } from "./$types"
 
 export const load: PageServerLoad = async ({ params }) => {
     const referralId = params.referralId
+    let isAssigned : boolean = false
     const response : Referral = await fetch(env.PUBLIC_CLIENT_FRONTEND_URL + "/referral/" + referralId)
         .then(async (d: Response) => {
             if (d.status != 200) {
@@ -43,13 +44,24 @@ export const load: PageServerLoad = async ({ params }) => {
                     console.log(e)
                     return []
                 })
-            console.log(files)
         }
     }
+    // Assignment
+    isAssigned = await fetch(env.PUBLIC_CLIENT_FRONTEND_URL+"/assign/"+referralId)
+    .then(async(d: Response)=>{
+        if (d.status != 200) {
+            return false
+        }
+        return true
+    })
+    .catch((e) => {
+        throw new Error(e)
+    })
     return {
         referral: response,
         title: "Referral " + referralId,
         referralId: referralId,
-        referralFiles: files
+        referralFiles: files,
+        isAssigned: isAssigned
     }
 }

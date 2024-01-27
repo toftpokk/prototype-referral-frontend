@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { env } from '$env/dynamic/public';
     import ReferralView from '$lib/ReferralView.svelte';
     import * as Card from '$lib/components/ui/card';
     import { ReferralStatus, translateFileState } from '$lib/global';
@@ -16,11 +17,16 @@
             </Card.Header>
             <Card.Content>
                 <ul>
-                    {#each data.referralFiles as file}
                     <li class="w-50 flex justify-between">
+                    {#each data.referralFiles as file}
                         <span>{file}</span>
-                        <span>{translateFileState(referral.ReferralStatus)}</span></li>
+                        {#if data.isAssigned}
+                            <a class="underline" href={env.PUBLIC_CLIENT_FRONTEND_URL+"/referral/"+data.referralId+"/download/"+file} download>Download</a>
+                        {:else}
+                            <span>{translateFileState(referral.ReferralStatus)}</span>
+                        {/if}
                     {/each}
+                    </li>
                 </ul>
             </Card.Content>
           </Card.Root>

@@ -11,7 +11,6 @@
         const payload = JSON.stringify({
             Granted: verdict
         })
-        console.log(payload)
         const response = fetch(env.PUBLIC_CLIENT_FRONTEND_URL+"/referral/"+data.referralId+"/grant",{
             method: "POST",
             body: payload
@@ -21,8 +20,20 @@
                 return
             }
             grantError = ""
-            invalidateAll()
         })
+        invalidateAll()
+    }
+    const sendReferral = ()=>{
+        const response = fetch(env.PUBLIC_CLIENT_FRONTEND_URL+"/assign/"+data.referralId+"?doctor=test",{
+            method: "POST",
+        }).then(async (d: Response)=>{
+            if(d.status != 200){
+                grantError = (await d.json()).message
+                return
+            }
+            grantError = ""
+        })
+        invalidateAll()
     }
 </script>
 <div class="mx-auto max-w-[40rem]">
@@ -81,13 +92,19 @@
                     <li class="w-50 flex justify-between">
                         <span>{file}</span>
                         {#if data.referral.ReferralStatus == ReferralStatus.Complete}
-                            <a class="underline" href={env.PUBLIC_CLIENT_FRONTEND_URL+"/referral/"+data.referralId+"/download/"+file} download>Download</a>
+                            <!-- <a class="underline" href={env.PUBLIC_CLIENT_FRONTEND_URL+"/referral/"+data.referralId+"/download/"+file} download>Download</a> -->
+                            <span>Done</span>
                         {:else}
                             <span>{translateFileState(data.referral.ReferralStatus)}</span>
                         {/if}
                     </li>
                     {/each}
                 </ul>
+                {/if}
+                {#if !data.isAssigned}
+                    <Button on:click={sendReferral}>Send Referral to Doctor</Button>
+                {:else}
+                <Button disabled>This referral has been transferred to HIS</Button>
                 {/if}
             {:else}
                 <ul>
