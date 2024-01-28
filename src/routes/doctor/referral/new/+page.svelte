@@ -182,14 +182,16 @@
   {/await}
   <Label class="font-semibold text-[11pt] block mb-1 mt-5" for="Department"
     >Department<span class="text-red-500">*</span>
-    <span class="ml-2 text-muted-foreground font-normal">This field can be seen by non-medical personnel</span></Label
+    </Label
   >
+  <p class="text-muted-foreground text-sm">This can be seen by non-medical personnel. Please do not put any personally identifiable information.</p>
   <Input class="" name="Department" bind:value={selectedDept}  required
   />
   <Label for="Reason" class="font-semibold text-[11pt] block mb-1 mt-5"
     >Reason for Referral<span class="text-red-500">*</span>
-    <span class="ml-2 text-muted-foreground font-normal">This field will be seen by non-medical personnel</span></Label
+    </Label
   >
+  <p class="text-muted-foreground text-sm">This can be seen by non-medical personnel. Please do not put any personally identifiable information.</p>
   <Textarea id="Reason" name="Reason">
   </Textarea>
   <Label for="History" class="font-semibold text-[11pt] block mb-1 mt-5"
