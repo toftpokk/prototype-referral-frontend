@@ -16,18 +16,6 @@ export const load : PageLoad = async ({ params }) => {
             return new Error("a")
         })
         let files : string[] = []
-        files = await fetch(env.PUBLIC_CLIENT_FRONTEND_URL+"/referral/"+referralId+"/outfile")
-            .then(async(d: Response)=>{
-                if (d.status != 200) {
-                    console.log("e")
-                    throw await d.json()
-                }
-                return d.json()
-            })
-            .catch((e) => {
-                console.log(e)
-                return new Error("a")
-            })
     isAssigned = await fetch(env.PUBLIC_CLIENT_FRONTEND_URL+"/assign/"+referralId)
     .then(async(d: Response)=>{
         if (d.status != 200) {
@@ -52,6 +40,34 @@ export const load : PageLoad = async ({ params }) => {
             console.log("aaa", e)
             referralDatafile = {Summary:[],Diagnosis:"",History:""}
         }
+        // Get result dir
+        files = await fetch(env.PUBLIC_CLIENT_FRONTEND_URL+"/referral/"+referralId+"/file")
+            .then(async(d: Response)=>{
+                if (d.status != 200) {
+                    console.log("e")
+                    throw await d.json()
+                }
+                return d.json()
+            })
+            .catch((e) => {
+                console.log(e)
+                return new Error("a")
+            })
+    }
+    else{
+        // Get origin dir
+        files = await fetch(env.PUBLIC_CLIENT_FRONTEND_URL+"/referral/"+referralId+"/outfile")
+            .then(async(d: Response)=>{
+                if (d.status != 200) {
+                    console.log("e")
+                    throw await d.json()
+                }
+                return d.json()
+            })
+            .catch((e) => {
+                console.log(e)
+                return new Error("a")
+            })
     }
     return {
         title: "Referral "+referralId,
