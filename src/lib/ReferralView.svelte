@@ -58,13 +58,17 @@ import { Badge } from "./components/ui/badge";
       <Card.Title>Patient</Card.Title>
     </Card.Header>
     <Card.Content>
-        {#if isDoc}
-        <div class="key">Name</div>
-        <div class="val">{translateName(referral)}</div>     
-        {/if}
         <div class="key">Gender</div>
         <div class="val">{referral.Gender}</div>
         <div class="key">Age</div>
         <div class="val">{new Date().getFullYear() -  Number(referral.BirthDate.slice(0,4))}</div>
+        {#if isDoc}
+        <div class="key">Name</div>
+        <div class="val">{translateName(referral)}</div>   
+        <div class="key">Contact Email</div>
+        <div class="val">{referral.Email}</div>
+        <div class="key">Contact Telephone</div>
+        <div class="val">{referral.Telephone}</div>  
+        {/if}
     </Card.Content>
   </Card.Root>

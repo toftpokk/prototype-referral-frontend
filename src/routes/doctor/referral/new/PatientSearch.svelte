@@ -19,10 +19,10 @@ const columns = table.createColumns([
     accessor: "Hn",
     header: "HN"
   }),
-  table.column({
-    accessor: "CitizenId",
-    header: "Citizen ID"
-  }),
+  // table.column({
+  //   accessor: "CitizenId",
+  //   header: "Citizen ID"
+  // }),
   table.column({
     accessor: translateName,
     header: "Name"
@@ -35,14 +35,14 @@ const columns = table.createColumns([
     accessor: "Gender",
     header: "Gender"
   }),
-  table.column({
-    accessor: "Email",
-    header: "Email"
-  }),
-  table.column({
-    accessor: "Telephone",
-    header: "Telephone"
-  }),
+  // table.column({
+  //   accessor: "Email",
+  //   header: "Email"
+  // }),
+  // table.column({
+  //   accessor: "Telephone",
+  //   header: "Telephone"
+  // }),
 ])
 const { headerRows, pageRows, tableAttrs, tableBodyAttrs } =
     table.createViewModel(columns,{
