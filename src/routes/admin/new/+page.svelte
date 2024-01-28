@@ -33,7 +33,7 @@
             return false
         }
         let formObject = JSON.stringify(Object.fromEntries(formData));
-        fetch(env.PUBLIC_SERVER_FRONTEND_URL+"/hospital",{
+        fetch(env.PUBLIC_SERVER_FRONTEND_URL+"/hospitals",{
             method: "POST",
             body: formObject
         })

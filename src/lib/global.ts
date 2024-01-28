@@ -165,8 +165,12 @@ export async function translateHospital(hcode: string) : Promise<string>{
     }
     // Not -> fetch
     let response
-    try{
-        response = await fetch(env.PUBLIC_CLIENT_FRONTEND_URL + "/hospitals")
+    let FRONTEND=env.PUBLIC_CLIENT_FRONTEND_URL
+    if(env.PUBLIC_ROLE == "Server"){
+        FRONTEND=env.PUBLIC_SERVER_FRONTEND_URL
+    }
+    try{     
+        response = await fetch(FRONTEND + "/hospitals")
         .then(async (d: Response)=>{
             if(d.status != 200){
                 throw await d.json()

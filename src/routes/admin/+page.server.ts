@@ -2,7 +2,7 @@ import { env } from "$env/dynamic/public";
 import type { Hospital, Referral } from "$lib/global"
 
 export function load(){
-    const response = fetch(env.PUBLIC_SERVER_FRONTEND_URL+"/hospital")
+    const response = fetch(env.PUBLIC_SERVER_FRONTEND_URL+"/hospitals")
         .then(async (d: Response)=>{
             if(d.status != 200){
                 throw await d.json()
