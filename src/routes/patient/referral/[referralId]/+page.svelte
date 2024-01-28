@@ -19,6 +19,7 @@
     {#await data.referral}
         <p>Loading Referral...</p>
     {:then referral}
+        <ReferralView referral={referral} referralId={data.referralId}/>  
           <Card.Root class="my-2">
             <Card.Header class="pb-0">
               <Card.Title>Consent</Card.Title>
@@ -62,7 +63,6 @@
         {/if}
             </Card.Content>
           </Card.Root> 
-          <ReferralView referral={referral} referralId={data.referralId}/>  
     {:catch}
         <p>Error: Could not fetch referral</p>
     {/await}
