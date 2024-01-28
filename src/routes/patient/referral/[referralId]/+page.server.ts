@@ -1,6 +1,7 @@
 import { env } from "$env/dynamic/public"
-import type { Referral } from "$lib/global"
+import type { HospitalData, Referral } from "$lib/global"
 import { fail } from "@sveltejs/kit"
+import { translateHospitalServer } from '$lib/server/helper';
 import type { PageServerLoad } from "./$types"
 
 export const load : PageServerLoad = ({ params }) => {
@@ -15,10 +16,23 @@ export const load : PageServerLoad = ({ params }) => {
         .catch((e)=>{
             return new Error("a")
         })
+    let response2
+        response2 = fetch(env.PUBLIC_SERVER_FRONTEND_URL + "/hospitals")
+        .then(async (d: Response)=>{
+            if(d.status != 200){
+                throw await d.json()
+            }
+            return d.json()
+        })
+        .catch((e)=>{
+            return new Error("a")
+        })
+    const hospitalCache = response2
     return {
         title: "Referral "+referralId,
         referralId: referralId,
         referral: response as Promise<Referral>,
+        hospitalCache: hospitalCache as Promise<HospitalData[]>
     } 
 }
 

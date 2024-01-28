@@ -1,5 +1,5 @@
 import { env } from "$env/dynamic/public";
-import type { Referral } from "$lib/global"
+import type { HospitalData, Referral } from "$lib/global"
 
 export function load({cookies}){
     const response = fetch(env.PUBLIC_SERVER_FRONTEND_URL+"/?username="+cookies.get("username"))
@@ -18,8 +18,21 @@ export function load({cookies}){
             console.log(e)
             return new Error("a")
         })
+        let response2
+        response2 = fetch(env.PUBLIC_SERVER_FRONTEND_URL + "/hospitals")
+        .then(async (d: Response)=>{
+            if(d.status != 200){
+                throw await d.json()
+            }
+            return d.json()
+        })
+        .catch((e)=>{
+            return new Error("a")
+        })
+    const hospitalCache = response2
     return {
         title: "Referral Cases",
         referrals: response as Promise<Referral[]>,
+        hospitalCache: hospitalCache as Promise<HospitalData[]>
     } 
 }

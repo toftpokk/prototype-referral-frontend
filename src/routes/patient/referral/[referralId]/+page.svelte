@@ -8,25 +8,34 @@
     import {Input} from '$lib/components/ui/input';
     import Checkbox from '$lib/components/ui/checkbox/checkbox.svelte';
     import Label from '$lib/components/ui/label/label.svelte';
-    import { ReferralStatus, translateHospital, translateName } from '$lib/global';
+    import { ReferralStatus, translateName } from '$lib/global';
     import { cn } from '$lib/utils';
     import { enhance } from '$app/forms';
 
     export let form : import('./$types').ActionData
     export let data : import('./$types').PageData;
+    async function translateHospitalServer(hcode: string){
+        const filtered = (await data.hospitalCache).filter((d)=>d.HospitalId == hcode)
+        if(filtered.length > 0){
+            return filtered[0].HospitalName
+        }
+        else{
+            return "Unknown"
+        }
+    }
 </script>
 <div class="mx-auto max-w-[40rem]">
     {#await data.referral}
         <p>Loading Referral...</p>
     {:then referral}
-        <ReferralView referral={referral} referralId={data.referralId}/>  
+        <ReferralView referral={referral} referralId={data.referralId} translateHospital={translateHospitalServer}/>  
           <Card.Root class="my-2">
             <Card.Header class="pb-0">
               <Card.Title>Consent</Card.Title>
             </Card.Header>
             <Card.Content>
         {#if referral.ReferralStatus == ReferralStatus.Created}
-            {#await translateHospital(referral.Destination)}
+            {#await translateHospitalServer(referral.Destination)}
                 <p class="my-2">Loading...</p>
             {:then destHos}
             <form class="block my-4" method="POST" use:enhance>

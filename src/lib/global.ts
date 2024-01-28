@@ -157,7 +157,7 @@ export function translateName(obj : {Prefix: string, FirstName: string, LastName
 }
 
 let hospitalCache : HospitalData[] = []
-export async function translateHospital(hcode: string) : Promise<string>{
+export async function translateHospitalClient(hcode: string) : Promise<string>{
     // Check if in cache
     let filtered = hospitalCache.filter((d)=>d.HospitalId == hcode)
     if(filtered.length > 0){
@@ -165,12 +165,8 @@ export async function translateHospital(hcode: string) : Promise<string>{
     }
     // Not -> fetch
     let response
-    let FRONTEND=env.PUBLIC_CLIENT_FRONTEND_URL
-    if(env.PUBLIC_ROLE == "Server"){
-        FRONTEND=env.PUBLIC_SERVER_FRONTEND_URL
-    }
     try{     
-        response = await fetch(FRONTEND + "/hospitals")
+        response = await fetch(env.PUBLIC_CLIENT_FRONTEND_URL + "/hospitals")
         .then(async (d: Response)=>{
             if(d.status != 200){
                 throw await d.json()

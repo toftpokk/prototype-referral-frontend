@@ -3,7 +3,7 @@
     import FileView from '$lib/FileView.svelte';
     import ReferralView from '$lib/ReferralView.svelte';
     import * as Card from '$lib/components/ui/card';
-    import { ReferralStatus, translateFileState } from '$lib/global';
+    import { ReferralStatus, translateFileState, translateHospitalClient } from '$lib/global';
 
     export let data : import('./$types').PageData;
 </script>
@@ -11,7 +11,7 @@
     {#await data.referral}
         <p>Loading Referral...</p>
     {:then referral} 
-        <ReferralView referral={referral} referralId={data.referralId} isDoc={true}/>
+        <ReferralView referral={referral} referralId={data.referralId} isDoc={true} translateHospital={translateHospitalClient}/>
           <FileView
             referral={referral}
             referralId={data.referralId}

@@ -1,8 +1,9 @@
 <script lang="ts">
 import * as Table from "$lib/components/ui/table";
-    import {type Referral, translateHospital, translateName } from "$lib/global";
+    import {type Referral, translateName } from "$lib/global";
     import ReferralStatusBadge from "./ReferralStatusBadge.svelte";
     import TableMenu from "./TableMenu.svelte";
+export let translateHospital : (hcode: string)=>Promise<string>
 export let referrals : Referral[] = []
 export let referralLink : string = "/"
 export let isDoc : boolean = false

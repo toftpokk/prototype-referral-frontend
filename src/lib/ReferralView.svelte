@@ -3,7 +3,8 @@
     import ReferralStatusBadge from "./ReferralStatusBadge.svelte";
 import { Badge } from "./components/ui/badge";
     import * as Card from "./components/ui/card";
-    import { translateName, type Referral, translateHospital } from "./global";
+    import { translateName, type Referral } from "./global";
+    export let translateHospital : (hcode: string)=>Promise<string>
     export let referral : Referral 
     export let referralId : string 
     export let isDoc : boolean = false

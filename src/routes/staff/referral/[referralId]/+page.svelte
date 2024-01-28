@@ -5,7 +5,7 @@
     import FileView from '$lib/FileView.svelte';
     import { Button } from '$lib/components/ui/button';
     import * as Card from '$lib/components/ui/card';
-    import { ReferralStatus, translateFileState } from '$lib/global';
+    import { ReferralStatus, translateFileState, translateHospitalClient } from '$lib/global';
     export let data : import('./$types').PageData;
     let grantError = ""
     const grant = (verdict: boolean)=>()=>{
@@ -86,5 +86,5 @@
         isDoc={false}
         sendReferral={sendReferral}
         ></FileView>
-      <ReferralView referral={data.referral} referralId={data.referralId}/>
+      <ReferralView referral={data.referral} referralId={data.referralId} translateHospital={translateHospitalClient}/>
 </div>

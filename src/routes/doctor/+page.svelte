@@ -1,5 +1,6 @@
 <script lang="ts">
   import { Button } from "$lib/components/ui/button";
+    import { translateHospitalClient } from "$lib/global.js";
     import ReferralTable from '$lib/ReferralTable.svelte';
     import Spinner from '$lib/Spinner.svelte';
     // import ab from './Abraham100_Stracke611_990db43c-4604-a27c-4153-bfa9ef42a9e2.json'
@@ -40,9 +41,9 @@
     </div>
     {:then r}
         <h2 class="text-xl">Refer-Out</h2>
-        <ReferralTable isDoc={true} referrals={r.referrals.referrals} referralLink="/doctor/referral"/>
+        <ReferralTable isDoc={true} referrals={r.referrals.referrals} referralLink="/doctor/referral" translateHospital={translateHospitalClient}/>
         <h2 class="text-xl">Refer-In</h2>
-        <ReferralTable isDoc={true} referrals={r.doctorReferrals} referralLink="/doctor/referral"/>
+        <ReferralTable isDoc={true} referrals={r.doctorReferrals} referralLink="/doctor/referral" translateHospital={translateHospitalClient}/>
     {:catch}
         <div class="mx-auto w-[20rem] text-xl text-center">Error: Could not load referral data</div>
     {/await}
