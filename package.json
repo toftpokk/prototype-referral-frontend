@@ -7,9 +7,9 @@
     "build": "vite build",
     "preview": "vite preview",
     "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
-    "dev1": "PUBLIC_ROLE=Client PUBLIC_HOSPITAL_ID=1111 PUBLIC_HOSPITAL_NAME='First Government Hospital' PUBLIC_CLIENT_FRONTEND_URL='http://localhost:8444'  npx vite dev --port=5000",
-    "dev2": "PUBLIC_ROLE=Client PUBLIC_HOSPITAL_ID=2222 PUBLIC_HOSPITAL_NAME='Second Private Hospital' PUBLIC_CLIENT_FRONTEND_URL='http://192.168.1.34:8447'  npx vite dev --port=5200 --host",
-    "dev3": "PUBLIC_ROLE=Server PUBLIC_HOSPITAL_ID=2222 PUBLIC_HOSPITAL_NAME='Second Private Hospital' PUBLIC_CLIENT_FRONTEND_URL='http://192.168.1.34:8447'  npx vite dev --port=5300 --host",
+    "dev1": "PUBLIC_ROLE=Client PUBLIC_HOSPITAL_ID=1111 PUBLIC_HOSPITAL_NAME='First Government Hospital' PUBLIC_CLIENT_FRONTEND_URL='http://192.168.1.5:8444'  npx vite dev --port=5000",
+    "dev2": "PUBLIC_ROLE=Client PUBLIC_HOSPITAL_ID=2222 PUBLIC_HOSPITAL_NAME='Second Private Hospital' PUBLIC_CLIENT_FRONTEND_URL='http://192.168.5:8447'  npx vite dev --port=5200 --host",
+    "dev3": "PUBLIC_ROLE=Server PUBLIC_HOSPITAL_ID=2222 PUBLIC_HOSPITAL_NAME='Second Private Hospital' PUBLIC_CLIENT_FRONTEND_URL='http://192.168.1.5:8447'  npx vite dev --port=5300 --host",
     "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
     "lint": "eslint ."
   },
