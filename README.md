@@ -1,11 +1,15 @@
 # README
 ## Running
 
-Client:
+Origin:
 ```
-yarn dev1
+yarn dev_origin
+```
+Dest:
+```
+yarn dev_dest
 ```
 Server:
 ```
-yarn dev3
+yarn dev_center
 ```
